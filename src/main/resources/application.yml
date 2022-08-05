@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: 'true'
+
+    hibernate:
+      ddl-auto: create
+
+  datasource:
+    schema: classpath*:db/schema.sql
+    password: ghkd0045
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/nts?serverTimezone=Asia/Seoul
+#    initialization-mode: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: ERROR
