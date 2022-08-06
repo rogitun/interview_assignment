@@ -9,6 +9,7 @@ import nts.assignment.domain.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ import static nts.assignment.domain.QPost.post;
 public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<MainPostDto> getAllPost(Pageable pageable) {

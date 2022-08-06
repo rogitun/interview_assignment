@@ -95,4 +95,14 @@ public class PostController {
         }
        return new ResponseEntity(HttpStatus.OK);
     }
+
+    //'/post/'+id + '/pwdCheck',
+    @PostMapping("/post/{id}/pwdCheck")
+    @ResponseBody
+    public ResponseEntity pwdCheck(@PathVariable("id")Long id,String password){
+        log.info("password = {}",password);
+        boolean flag = postService.countByPassword(id, password);
+        if(flag) return new ResponseEntity(HttpStatus.OK);
+        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
 }

@@ -3,14 +3,29 @@ $(document).ready(function(){
  while(true){
     let pwd = $('#pwd').val();
     let tryPwd = prompt("비밀번호를 입력하세요.");
-
+    let pid = $('#pid').val();
     if(tryPwd==null){
-        let pid = $('#pid').val();
         let url = "/post/"+pid;
         window.location.replace(url);
         break;
     }
-    if(pwd==tryPwd) {
+
+    let flag;
+
+    $.ajax({
+        type: 'post',
+        url: "/post/" + pid + "/pwdCheck",
+        data: "password="+tryPwd,
+        async: false,
+        success: function(result){
+            flag = true;
+        },
+        error: function(error){
+            flag= false;
+        },
+    });
+
+    if(flag){
         let doc = document.getElementById("formWrap");
         doc.style.display = 'block';
         break;
@@ -18,12 +33,20 @@ $(document).ready(function(){
     else{
         alert("비밀번호가 일치하지 않습니다.");
     }
+
+//    if(pwd==tryPwd) {
+//        let doc = document.getElementById("formWrap");
+//        doc.style.display = 'block';
+//        break;
+//    }
+//    else{
+//        alert("비밀번호가 일치하지 않습니다.");
+//    }
  }
 })
 
-
-function edit(pid){
-        let pwd = $('#pwd').val();
+function edit(pid,encode){
+        let pwd = encode;
 
         let title = $('#title').val();
         let content = $('#content').val();

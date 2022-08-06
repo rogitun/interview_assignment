@@ -5,6 +5,7 @@ import nts.assignment.domain.Post;
 import nts.assignment.repository.post.PostRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +16,13 @@ import java.time.LocalDateTime;
 public class Dummies {
 
     private final PostRepository postRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void init(){
         Post post = Post.builder()
-                .password("1234")
+                .password(passwordEncoder.encode("1234"))
                 .writer("tester")
                 .content("ㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇ")
                 .created(LocalDateTime.now())

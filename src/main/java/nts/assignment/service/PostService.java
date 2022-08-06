@@ -15,8 +15,10 @@ import nts.assignment.repository.hashtag.TagPostRepository;
 import nts.assignment.repository.post.PostRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,18 +33,20 @@ public class PostService {
     private final PostRepository postRepository;
     private final HashtagRepository hashtagRepository;
     private final TagPostRepository tagPostRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional
     public void addPost(PostForm postForm) {
         Post post = makeNewPost(postForm);
-        makeHashTags(postForm.getHashtag(),post);
+        if(StringUtils.hasText(postForm.getHashtag()))
+            makeHashTags(postForm.getHashtag(),post);
     }
 
     private Post makeNewPost(PostForm postForm) {
         Post build = Post.builder()
                 .title(postForm.getTitle())
                 .writer(postForm.getWriter())
-                .password(postForm.getPassword()) //TODO 암호화 필요함
+                .password(passwordEncoder.encode(postForm.getPassword())) //TODO 암호화 필요함
                 .content(postForm.getContent())
                 .created(LocalDateTime.now())
                 .modified(LocalDateTime.now()).build();
@@ -84,13 +88,22 @@ public class PostService {
     public void delPost(Long id, String password) {
         //비밀번호 일치 확인
         log.info("param = {}, {}",id,password);
-        Long cnt = postRepository.countPostByPassword(id, password);
-        log.info("cnt = {}",cnt);
-        if(cnt<=0){ //없으면 예외
-            throw new NoSuchElementException();
+        Optional<Post> byId = postRepository.findById(id);
+        if(byId.isEmpty()) throw new NoSuchElementException();
+
+        Post post = byId.get();
+
+        //비밀번호 일치 확인 TODO 비밀번호만 가져와서 비교하면 조회 쿼리 단순화 가능
+        if(passwordEncoder.matches(password,post.getPassword())){
+            postRepository.deleteById(id);
         }
+        else throw new NoSuchElementException();
+        //Long cnt = postRepository.countPostByPassword(id, password);
+        //log.info("cnt = {}",cnt);
+//        if(cnt<=0){ //없으면 예외
+//            throw new NoSuchElementException();
+//        }
         //있으면 삭제
-        postRepository.deleteById(id);
     }
 
     public List<Hashtag> getHashTags(Long id) {
@@ -125,10 +138,16 @@ public class PostService {
 
         //존재하면
         Post curPost = post.get();
-        curPost.editPost(obj.getTitle(),obj.getContent(),obj.getPassword(),obj.getWriter());
+        curPost.editPost(obj.getTitle(),obj.getContent(),passwordEncoder.encode(obj.getPassword()),obj.getWriter());
 
         //기존 해시태그 삭제하고 새로 등록한다.
         tagPostRepository.deleteByPostId(id);
         makeHashTags(obj.getHashtag(),curPost);
+    }
+
+    public boolean countByPassword(Long id, String password) {
+        String encodePwd = postRepository.findPasswordById(id);
+        boolean result = passwordEncoder.matches(password, encodePwd);
+        return result;
     }
 }

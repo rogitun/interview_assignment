@@ -27,7 +27,6 @@
             <div class="formWrapper" id="formWrap" style="display:none">
                 <a class="backButton" th:href="@{/}"><i class="im im-angle-left"></i></a>
                 <br>
-                <input th:name="pwd" th:value="${post.password}" id="pwd" hidden/>
                 <input th:name="pid" th:value="${post.postId}" id="pid" hidden/>
 
                 <form class="form" method="POST" th:object="${post}">
@@ -55,7 +54,7 @@
                         <span><span>비밀번호 : </span><input id="password" name="password" type="password" required/></span>
                     </div>
 
-                    <input class="btn btn--sub btn--lg  my-md" type="button" th:onclick="edit([[${post.postId}]])" value="수정하기!" />
+                    <input class="btn btn--sub btn--lg  my-md" type="button" th:onclick="edit([[${post.postId}]],[[${post.password}]])" value="수정하기!" />
                 </form>
             </div>
         </div>
