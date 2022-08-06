@@ -51,17 +51,22 @@
             <h3 class="singleProject__subtitle">댓글</h3>
             <h5 class="project--rating">
               <span th:text="|좋아요 : ${post.likes} From (${post.viewed})|"></span>
-            </h5>
+            </h5><hr>
 
             <form class="form" action="#" method="POST">
               <!-- Textarea -->
               <div class="form__field">
-                <label for="formInput#textarea">Comments: </label>
-                <textarea class="input input--textarea" name="message" id="formInput#textarea"
+                <span><input type="text" name="writer" id="writer" placeholder="작성자"/>
+                      <input type="password" name="password" id="password" placeholder="비밀번호">
+                </span>
+                <label for="content">Comments: </label>
+                <textarea class="input input--textarea" name="message" id="content"
                   placeholder="댓글을 남겨주세요"></textarea>
               </div>
-              <input class="btn btn--sub btn--lg" type="submit" value="작성" />
+              <input class="btn btn--sub btn--lg" type="button" th:onclick="addComment([[${post.postId}]])" value="작성" />
             </form>
+            <br>
+            <hr>
             <div class="commentList">
               <div class="comment">
                 <div class="comment__details">
@@ -83,4 +88,5 @@
   </main>
 </body>
 <script th:src="@{/js/post.js}"></script>
+<script th:src="@{/js/comment.js}"></script>
 </html>
