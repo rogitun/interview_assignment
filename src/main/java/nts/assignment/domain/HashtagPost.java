@@ -3,8 +3,6 @@ package nts.assignment.domain;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor

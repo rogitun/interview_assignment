@@ -35,11 +35,11 @@ public class Post {
     private int likes;
     private int isNew;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     @Builder.Default
     private List<Comment> comments = new LinkedList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<HashtagPost> hashtags = new LinkedList<>();
 }

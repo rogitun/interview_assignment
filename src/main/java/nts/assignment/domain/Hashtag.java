@@ -1,6 +1,8 @@
 package nts.assignment.domain;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@NoArgsConstructor
 public class Hashtag {
     @Id @GeneratedValue
     private Long hashtag_id;
@@ -20,4 +23,7 @@ public class Hashtag {
     @OneToMany(mappedBy = "hashtag")
     private List<HashtagPost> posts = new LinkedList<>();
 
+    public Hashtag(String name) {
+        this.name = name;
+    }
 }

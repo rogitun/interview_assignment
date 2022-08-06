@@ -8,9 +8,7 @@ import nts.assignment.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,13 +23,13 @@ public class PostController {
 
     @GetMapping("/add-post")
     public String addPostForm(){
-        return "/form/postForm";
+        return "/post/postForm";
     }
 
     @PostMapping("/add-post")
-    public String addPost(PostForm postForm){
-        log.info("input data : {} ", postForm);
-        postService.addPost(postForm);
+    public String addPost(@RequestBody PostForm obj){
+        log.info("input data : {} ", obj);
+        postService.addPost(obj);
         return "redirect:/";
     }
 
