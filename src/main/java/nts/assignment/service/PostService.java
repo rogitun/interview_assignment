@@ -53,7 +53,7 @@ public class PostService {
     private void makeHashTags(String hashtag,Post post) {
         String[] hashtags = hashtag.split("#");//해쉬태그 구분
         for (String s : hashtags) {
-            s.replaceAll(" ","");//공백 제거
+            s = s.replaceAll(" ","");//공백 제거
             Optional<Hashtag> hashTag = hashtagRepository.findByName(s);
 
             if(hashTag.isPresent()){ //기존에 존재하는 hashTag, 연관관계 매핑
