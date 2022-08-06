@@ -6,6 +6,7 @@ import nts.assignment.domain.dto.SinglePostDto;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.service.PostService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,10 +28,11 @@ public class PostController {
     }
 
     @PostMapping("/add-post")
-    public String addPost(@RequestBody PostForm obj){
+    @ResponseBody
+    public ResponseEntity addPost(@RequestBody PostForm obj){
         log.info("input data : {} ", obj);
         postService.addPost(obj);
-        return "redirect:/";
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
@@ -43,5 +45,16 @@ public class PostController {
             resp.sendError(HttpStatus.NO_CONTENT.value(),"No Such Content");
         }
         return "/post/post_detail";
+    }
+
+    @PostMapping("/post/{id}/del")
+    @ResponseBody
+    public ResponseEntity delPost(@PathVariable("id") Long id,String password){
+        try {
+            postService.delPost(id, password);
+        }catch (NoSuchElementException e){
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 }

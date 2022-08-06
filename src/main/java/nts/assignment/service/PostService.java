@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -74,5 +75,18 @@ public class PostService {
     public SinglePostDto getSinglePost(Long id) {
         Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
         return singlePost.orElseThrow();
+    }
+
+    @Transactional
+    public void delPost(Long id, String password) {
+        //비밀번호 일치 확인
+        log.info("param = {}, {}",id,password);
+        Long cnt = postRepository.countPostByPassword(id, password);
+        log.info("cnt = {}",cnt);
+        if(cnt<=0){ //없으면 예외
+            throw new NoSuchElementException();
+        }
+        //있으면 삭제
+        postRepository.deleteById(id);
     }
 }
