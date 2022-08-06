@@ -6,7 +6,9 @@ import nts.assignment.domain.Hashtag;
 import nts.assignment.domain.HashtagPost;
 import nts.assignment.domain.Post;
 import nts.assignment.domain.dto.MainPostDto;
+import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
+import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.repository.hashtag.HashtagRepository;
 import nts.assignment.repository.hashtag.TagPostRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -88,5 +91,44 @@ public class PostService {
         }
         //있으면 삭제
         postRepository.deleteById(id);
+    }
+
+    public List<Hashtag> getHashTags(Long id) {
+        List<Hashtag> hastTags = hashtagRepository.findHashTagByPostId(id);
+//        log.info("size = {}",hastTags.size());
+//        for (Hashtag hastTag : hastTags) {
+//            log.info("hashTag = {}",hastTag.getName());
+//        }
+        return hastTags;
+    }
+
+    public PostFormDto getEditingPost(Long id) {
+        Optional<PostFormDto> editForm = postRepository.findPostByPassword(id);
+        return editForm.orElseThrow();
+    }
+
+
+    public String getHashTagsString(Long id) {
+        List<Hashtag> hastTags = hashtagRepository.findHashTagByPostId(id);
+        String hash = "";
+        for (Hashtag hastTag : hastTags) {
+            hash += ("#" + hastTag.getName());
+        }
+        return hash;
+    }
+
+    @Transactional
+    public void editPost(Long id, EditForm obj) {
+        //id, obj.pwd 값 비교해서 기존 엔티티 존재 여부 찾는다.
+        Optional<Post> post = postRepository.findPostByCredential(id, obj.getPwd());
+        if(post.isEmpty()) throw new NoSuchElementException();
+
+        //존재하면
+        Post curPost = post.get();
+        curPost.editPost(obj.getTitle(),obj.getContent(),obj.getPassword(),obj.getWriter());
+
+        //기존 해시태그 삭제하고 새로 등록한다.
+        tagPostRepository.deleteByPostId(id);
+        makeHashTags(obj.getHashtag(),curPost);
     }
 }

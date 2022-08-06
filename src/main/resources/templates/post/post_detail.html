@@ -27,17 +27,17 @@
     <div class="container">
       <div class="layout">
         <div class="column column--1of3">
-          <h3 class="singleProject__subtitle">해쉬태그</h3>
+          <h3 class="singleProject__subtitle">해시태그</h3>
           <div class="singleProject__toolStack">
-            <span class="tag tag--pill tag--sub tag--lg">
-              <small>해쉬태그1</small>
+            <span class="tag tag--pill tag--sub tag--lg" th:each="h : ${hashtags}">
+              <small th:text="|#${h.name}|">해쉬태그1</small>
             </span>
-            <span class="tag tag--pill tag--sub tag--lg">
-              <small>해쉬태그2</small>
-            </span>
+<!--            <span class="tag tag&#45;&#45;pill tag&#45;&#45;sub tag&#45;&#45;lg">-->
+<!--              <small>해쉬태그2</small>-->
+<!--            </span>-->
           </div>
-          <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> 수정하기</a>
-          <a class="tag tag--pill tag--main settings__btn" th:onclick="del([[${post.post_id}]])"><i class="im im-x-mark-circle-o"></i>삭제하기</a>
+          <a class="tag tag--pill tag--main settings__btn" th:href="@{/post/{id}/edit(id=${post.postId})}"><i class="im im-edit"></i> 수정하기</a>
+          <a class="tag tag--pill tag--main settings__btn" th:onclick="del([[${post.postId}]])"><i class="im im-x-mark-circle-o"></i>삭제하기</a>
         </div>
 
         <div class="column column--2of3">

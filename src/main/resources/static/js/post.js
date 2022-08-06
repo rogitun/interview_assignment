@@ -17,6 +17,41 @@ function del(id){
             alert("비밀번호가 다릅니다.");
         }
     })
+}
+
+function passwordCheck(id){
+
+    let password = prompt("비밀번호를 입력해주세요.");
+    let url = '/post/'+id+"/tryEdit";
+
+    $.ajax({
+        type: 'post',
+        url: url,
+        data: "password="+password,
+        success : function(result){
+            edit(id);
+        },
+        error : function(error){
+            alert("비밀번호가 다릅니다.");
+        }
+    })
+}
 
 
+function edit(id){
+
+    let password = prompt("비밀번호를 입력해주세요.");
+    let url = '/post/'+id+"/edit";
+
+    $.ajax({
+        type: 'post',
+        url: url,
+        data: "password="+password,
+        success : function(result){
+            window.location.replace("/");
+        },
+        error : function(error){
+            alert("비밀번호가 다릅니다.");
+        }
+    })
 }

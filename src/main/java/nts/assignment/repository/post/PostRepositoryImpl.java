@@ -3,10 +3,9 @@ package nts.assignment.repository.post;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import nts.assignment.domain.dto.MainPostDto;
-import nts.assignment.domain.dto.QMainPostDto;
-import nts.assignment.domain.dto.QSinglePostDto;
-import nts.assignment.domain.dto.SinglePostDto;
+import nts.assignment.domain.Post;
+import nts.assignment.domain.QPost;
+import nts.assignment.domain.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -46,4 +45,25 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .fetchOne();
         return Optional.ofNullable(singlePost);
     }
+
+    @Override
+    public Optional<PostFormDto> findPostByPassword(Long id) {
+        PostFormDto postFormDto = queryFactory.select(new QPostFormDto(post.postId,post.title, post.content, post.writer,post.password))
+                .from(post)
+                .where(post.postId.eq(id))
+                .fetchOne();
+
+        return Optional.ofNullable(postFormDto);
+    }
+
+    @Override
+    public Optional<Post> findPostByCredential(Long id, String pwd) {
+        Post post = queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .where(QPost.post.postId.eq(id), QPost.post.password.eq(pwd))
+                .fetchOne();
+
+        return Optional.ofNullable(post);
+    }
+
 }

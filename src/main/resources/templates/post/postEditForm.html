@@ -24,40 +24,42 @@
 
     <main class="formPage my-xl">
         <div class="content-box">
-            <div class="formWrapper">
+            <div class="formWrapper" id="formWrap" style="display:none">
                 <a class="backButton" th:href="@{/}"><i class="im im-angle-left"></i></a>
                 <br>
+                <input th:name="pwd" th:value="${post.password}" id="pwd" hidden/>
+                <input th:name="pid" th:value="${post.postId}" id="pid" hidden/>
 
-                <form class="form" method="POST">
+                <form class="form" method="POST" th:object="${post}">
                     <!-- Input:Text -->
                     <div class="form__field">
                         <label for="title">제목 </label>
-                        <input class="input input--text" id="title" type="text" name="title" required
-                            placeholder="제목" />
+                        <input class="input input--text" id="title" type="text" name="title" th:field="*{title}" th:value="*{title}" required
+                            placeholder="제목"/>
                     </div>
                     <div class="form__field">
-                        <textarea class="input input--textarea" name="content" id="content"
+                        <textarea class="input input--textarea" name="content" id="content" th:field="*{content}" th:value="*{content}"
                                   placeholder="..." required></textarea>
                     </div>
 
                     <div class="form__field">
                         <label for="title">해쉬태그 추가 / 최대 5개 </label>
                         <input class="input input--text" id="hashtag" type="text" name="hashtag"
-                               placeholder="#@@ 형식으로 입력해주세요." />
+                               placeholder="#@@ 형식으로 입력해주세요." th:value="${hashtag}"/>
                     </div>
 
                     <div class="form__field">
-                        <span><span>작성자 : </span><input id="writer" name="writer" type="text"required/></span>
+                        <span><span>작성자 : </span><input id="writer" name="writer" type="text" th:field="*{writer}" th:value="*{writer}" required/></span>
                     </div>
                     <div class="form__field">
                         <span><span>비밀번호 : </span><input id="password" name="password" type="password" required/></span>
                     </div>
 
-                    <input class="btn btn--sub btn--lg  my-md" type="button" th:onclick="addPost()" value="작성하기!" />
+                    <input class="btn btn--sub btn--lg  my-md" type="button" th:onclick="edit([[${post.postId}]])" value="수정하기!" />
                 </form>
             </div>
         </div>
     </main>
 </body>
-<script th:src="@{/js/postForm.js}"></script>
+<script th:src="@{/js/postEdit.js}"></script>
 </html>

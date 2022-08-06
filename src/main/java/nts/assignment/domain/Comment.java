@@ -25,7 +25,7 @@ public class Comment {
     private int likes;
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "postId")
     private Post post;
 
     public void addComment(Post post){

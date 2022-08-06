@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 public class SinglePostDto {
 
-    private Long post_id;
+    private Long postId;
     private String title;
     private String writer;
     private String content;
@@ -24,7 +24,7 @@ public class SinglePostDto {
 
     @QueryProjection
     public SinglePostDto(Long post_id, String title, String writer, String content, LocalDateTime created, LocalDateTime modified, int viewed, int likes, int isNew) {
-        this.post_id = post_id;
+        this.postId = post_id;
         this.title = title;
         this.writer = writer;
         this.content = content;

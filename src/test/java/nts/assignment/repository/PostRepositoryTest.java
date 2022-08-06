@@ -54,11 +54,11 @@ class PostRepositoryTest {
     void hashTag(){
         Hashtag hashtag = new Hashtag();
 
-        hashtag.setName("testHash");
-
-        hashtagRepository.save(hashtag);
-
-        Post post = new Post();
+//        hashtag.setName("testHash");
+//
+//        hashtagRepository.save(hashtag);
+//
+//        Post post = new Post();
 //
 //        post.setTitle("test1");
 //        post.setWriter("test2");

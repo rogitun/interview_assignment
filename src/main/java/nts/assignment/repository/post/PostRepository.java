@@ -11,5 +11,4 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
             "where p.postId = :id and " +
             "p.password = :pwd")
     Long countPostByPassword(@Param("id") Long id, @Param("pwd") String password);
-
 }

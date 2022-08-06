@@ -42,4 +42,13 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<HashtagPost> hashtags = new LinkedList<>();
+
+    public void editPost(String title,String content,String password,String writer){
+        this.title = title;
+        this.content = content;
+        this.password =password;
+        this.writer = writer;
+        modified = LocalDateTime.now();
+        hashtags.clear();
+    }
 }
