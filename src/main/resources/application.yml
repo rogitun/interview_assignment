@@ -22,3 +22,11 @@ logging:
     root: INFO
     org.springframework.web: INFO
     org.hibernate: ERROR
+
+thymeleaf:
+  prefix=classpath: templates/
+  suffix: .html
+  check-template-location: true
+  cache: false
+  mvc:
+    static-path-pattern: "/static/**"

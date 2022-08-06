@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" href="https://cdn.iconmonstr.com/1.3.0/css/iconmonstr-iconic-font.min.css" />
+    <!-- Mumble UI -->
+    <link th:href="@{/css/uikit/styles/uikit.css}" rel="stylesheet" />
+    <!-- Dev Search UI -->
+    <link th:href="@{/css/styles/app.css}" rel="stylesheet"/>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</head>
+<body>
+<!--<nav class="navbar" style="background-color: #e3f2fd;" th:fragment="nav">-->
+<!--    <div class="container-fluid">-->
+<!--        <a th:href="@{/}" class="navbar-brand">HOME</a>-->
+<!--        <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--            <li class="nav-item">-->
+<!--                <a class="nav-link active" aria-current="page" th:href="@{/add-post}">게시글 작성</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        <form class="d-flex" role="search">-->
+<!--            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--            <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</nav>-->
+<header class="header" th:fragment="nav">
+    <div class="container container--narrow">
+        <a class="header__menuItem" th:href="@{/}">HOME</a>
+        <nav class="header__nav">
+            <input type="checkbox" id="responsive-menu"/>
+            <label for="responsive-menu" class="toggle-menu">
+                <span>Menu</span>
+                <div class="toggle-menu__lines"></div>
+            </label>
+            <ul class="header__menu">
+                <li class="header__menuItem"><a href="account.html">My Account</a></li>
+                <li class="header__menuItem"><a href="login.html" class="btn btn--sub">글 작성하기</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+</body>
+</html>

@@ -1,6 +1,9 @@
 package nts.assignment.domain;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,7 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Entity
-@Data
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id @GeneratedValue
@@ -30,8 +36,10 @@ public class Post {
     private int isNew;
 
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<Comment> comments = new LinkedList<>();
 
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<HashtagPost> hashtags = new LinkedList<>();
 }
