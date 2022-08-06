@@ -1,7 +1,9 @@
 package nts.assignment;
 
 import lombok.RequiredArgsConstructor;
+import nts.assignment.domain.Comment;
 import nts.assignment.domain.Post;
+import nts.assignment.repository.comment.CommentRepository;
 import nts.assignment.repository.post.PostRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -17,6 +19,7 @@ public class Dummies {
 
     private final PostRepository postRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CommentRepository commentRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
@@ -29,6 +32,12 @@ public class Dummies {
                 .modified(LocalDateTime.now())
                 .title("제목").build();
         postRepository.save(post);
+
+
+        for(int i=0;i<5;i++) {
+            Comment comment = new Comment("writer"+i,"pwd"+i,"content"+i,post);
+            commentRepository.save(comment);
+        }
     }
 
 }

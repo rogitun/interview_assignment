@@ -6,10 +6,11 @@ import nts.assignment.domain.Comment;
 import nts.assignment.domain.Hashtag;
 import nts.assignment.domain.HashtagPost;
 import nts.assignment.domain.Post;
-import nts.assignment.domain.dto.CommentForm;
+import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.MainPostDto;
 import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
+import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.repository.comment.CommentRepository;
@@ -158,5 +159,9 @@ public class PostService {
                 passwordEncoder.encode(comment.getPassword()),
                 comment.getContent(), post);
         commentRepository.save(newComment);
+    }
+
+    public List<CommentDto> getComments(Long id) {
+        return commentRepository.findCommentByPostId(id);
     }
 }

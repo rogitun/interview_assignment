@@ -67,17 +67,14 @@
             </form>
             <br>
             <hr>
-            <div class="commentList">
-              <div class="comment">
+            <div class="commentList" >
+              <div class="comment" th:each="c : ${comments}">
                 <div class="comment__details">
-                  <a href="profile.html" class="comment__author">댓글 작성자</a>
-                  <p class="comment__info">
+                  <a class="comment__author" th:text="${c.writer}">댓글 작성자</a><span th:text="| on (${c.created})|"></span>
+                  <p class="comment__info" th:text="${c.content}">
                     댓글 본문 영역
                   </p>
                 </div>
-              </div>
-              <div class="comment">
-
               </div>
             </div>
           </div>

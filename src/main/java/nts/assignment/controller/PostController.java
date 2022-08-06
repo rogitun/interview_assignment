@@ -3,9 +3,10 @@ package nts.assignment.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nts.assignment.domain.Hashtag;
-import nts.assignment.domain.dto.CommentForm;
+import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
+import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.service.PostService;
@@ -45,14 +46,17 @@ public class PostController {
     public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
         SinglePostDto singlePost;
         List<Hashtag> hashtags;
+        List<CommentDto> comments;
         try {
             singlePost = postService.getSinglePost(id);
             hashtags = postService.getHashTags(id);
+            comments = postService.getComments(id);
         } catch (NoSuchElementException e) {
             log.info("e");
             resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
             return "/error/404";
         }
+        model.addAttribute("comments",comments);
         model.addAttribute("post", singlePost);
         model.addAttribute("hashtags", hashtags);
         return "/post/post_detail";
@@ -107,6 +111,7 @@ public class PostController {
     }
 
     @PostMapping("/post/{id}/addComment")
+    @ResponseBody
     public ResponseEntity<String> addComment(@PathVariable("id") Long id, @RequestBody CommentForm comment) {
         try {
             postService.addComment(id, comment);

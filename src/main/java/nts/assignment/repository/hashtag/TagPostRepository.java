@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface TagPostRepository extends JpaRepository<HashtagPost,Long> {
 
+
+    //TODO batch
     @Modifying
     @Query("delete from HashtagPost hp " +
             "where hp.post.postId =:id")
