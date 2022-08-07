@@ -8,6 +8,7 @@ import nts.assignment.domain.QComment;
 import nts.assignment.domain.QPost;
 import nts.assignment.domain.dto.*;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,21 +26,26 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     private final PasswordEncoder passwordEncoder;
 
+    private final int CONTENT_PER_PAGE = 10;
+
     @Override
     public Page<MainPostDto> getAllPost(Pageable pageable) {
+        int page = pageable.getPageNumber()==0?0:pageable.getPageNumber()-1;
+        PageRequest pageRequest = PageRequest.of(page,CONTENT_PER_PAGE);
+
         List<MainPostDto> data = queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer,
                         post.created, post.modified, post.viewed,
                         post.likes, post.isNew, post.comments.size()))
+                .offset(pageRequest.getOffset())
+                .limit(pageRequest.getPageSize())
                 .from(post)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .orderBy(post.created.desc())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(post.count())
                 .from(post);
 
-        return PageableExecutionUtils.getPage(data,pageable,countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(data,pageRequest,countQuery::fetchOne);
     }
 
     @Override

@@ -2,6 +2,7 @@ package nts.assignment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nts.assignment.controller.dto.Paging;
 import nts.assignment.domain.Post;
 import nts.assignment.domain.dto.MainPostDto;
 import nts.assignment.service.PostService;
@@ -22,17 +23,21 @@ public class MainController {
 
     //TODO 페이징, 검색
     @GetMapping("/")
-    public String main(Model model, Pageable pageable){
+    public String main(Model model, Pageable pageable) {
         Page<MainPostDto> allPost = postService.getAllPost(pageable);
         Long commentSize = postService.countAllComment();
-        model.addAttribute("commentCount",commentSize);
-        model.addAttribute("postCount",allPost.getTotalElements());
-        model.addAttribute("posts",allPost);
+
+        Paging paging = new Paging(allPost.getTotalPages(), allPost.getNumber());
+
+        model.addAttribute("commentCount", commentSize);
+        model.addAttribute("postCount", allPost.getTotalElements());
+        model.addAttribute("posts", allPost);
+        model.addAttribute("paging", paging);
         return "/main/main.html";
     }
 
     @GetMapping("/2")
-    public String main2(){
+    public String main2() {
         return "/main/projects";
     }
 

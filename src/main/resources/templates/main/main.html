@@ -66,11 +66,21 @@
         </div>
     </div>
     <div class="pagination">
-        <ul class="container">
-            <li><a href="#" class="btn btn--disabled">&#10094; Prev</a></li>
-            <li><a href="#" class="btn btn--sub">01</a></li>
-            <li><a href="#" class="btn">02</a></li>
-            <li><a href="#" class="btn">Next &#10095;</a></li>
+        <ul class="container" th:with="start = ${paging.first}, last=${paging.end}">
+            <li th:style="${posts.first} ? 'display:none'">
+                <a th:href="@{/(page=${paging.number})}" class="btn">&#10094; Prev</a>
+            </li>
+
+            <li  th:each="p : ${#numbers.sequence(start,last)}">
+                <a th:if="${p==paging.number+1}" th:href="@{/(page=${p})}" class="btn btn--sub" th:text="${p}"></a>
+                <a th:if="${p!=paging.number+1}" th:href="@{/(page=${p})}" class="btn" th:text="${p}">     </a>
+            </li>
+
+
+            <li th:style="${posts.last}? 'display:none'">
+                <a th:href="@{/(page=${posts.number+2})}" class="btn">Next &#10095;</a>
+            </li>
+
         </ul>
     </div>
 </main>

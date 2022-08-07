@@ -40,7 +40,6 @@ public class MainPostDto {
     public boolean calcDate(LocalDateTime created) {
         final int day = 86400;
         int second = LocalDateTime.now().getSecond() - created.getSecond();
-        System.out.println(second + " " + day);
         return (second / day) < 3;
     }
 }

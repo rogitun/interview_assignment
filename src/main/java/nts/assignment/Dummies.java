@@ -24,15 +24,26 @@ public class Dummies {
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
     public void init(){
+
         Post post = Post.builder()
                 .password(passwordEncoder.encode("1234"))
-                .writer("tester")
-                .content("ㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇ")
+                .writer("FirstWriter")
+                .content("ㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇ")
                 .created(LocalDateTime.now())
                 .modified(LocalDateTime.now())
                 .title("제목").build();
         postRepository.save(post);
 
+        for(int i=0;i<23;i++) {
+            Post post2 = Post.builder()
+                    .password(passwordEncoder.encode("1234"))
+                    .writer("tester"+i)
+                    .content("ㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇ"+i)
+                    .created(LocalDateTime.now())
+                    .modified(LocalDateTime.now())
+                    .title("제목").build();
+            postRepository.save(post2);
+        }
 
         for(int i=0;i<5;i++) {
             Comment comment = new Comment("writer"+i,passwordEncoder.encode("pwd"+i),"content"+i,post);
