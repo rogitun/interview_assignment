@@ -1,12 +1,14 @@
 package nts.assignment.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Comment {
     @Id @GeneratedValue
@@ -28,14 +30,18 @@ public class Comment {
     @JoinColumn(name = "postId")
     private Post post;
 
-    public void addComment(Post post){
+    public Comment(String writer, String password, String content,Post post) {
+        this.writer = writer;
+        this.password = password;
+        this.content = content;
+        created = LocalDateTime.now();
+        modified = created;
         post.getComments().add(this);
         this.post = post;
     }
 
-    public Comment(String writer, String password, String content) {
-        this.writer = writer;
-        this.password = password;
-        this.content = content;
+    public void delComment(){
+        this.content = "삭제된 댓글입니다.";
+        modified = LocalDateTime.now();
     }
 }

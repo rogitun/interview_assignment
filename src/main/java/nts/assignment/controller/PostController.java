@@ -3,8 +3,10 @@ package nts.assignment.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nts.assignment.domain.Hashtag;
+import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
+import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.service.PostService;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -34,25 +35,28 @@ public class PostController {
 
     @PostMapping("/add-post")
     @ResponseBody
-    public ResponseEntity addPost(@RequestBody PostForm obj) {
+    public ResponseEntity<String> addPost(@RequestBody PostForm obj) {
         log.info("input data : {} ", obj);
         postService.addPost(obj);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @GetMapping("/post/{id}")
     public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
-        SinglePostDto singlePost = null;
-        List<Hashtag> hashtags = null;
+        SinglePostDto singlePost;
+        List<Hashtag> hashtags;
+        List<CommentDto> comments;
         try {
             singlePost = postService.getSinglePost(id);
             hashtags = postService.getHashTags(id);
+            comments = postService.getComments(id);
         } catch (NoSuchElementException e) {
             log.info("e");
             resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
             return "/error/404";
         }
+        model.addAttribute("comments",comments);
         model.addAttribute("post", singlePost);
         model.addAttribute("hashtags", hashtags);
         return "/post/post_detail";
@@ -60,13 +64,13 @@ public class PostController {
 
     @PostMapping("/post/{id}/del")
     @ResponseBody
-    public ResponseEntity delPost(@PathVariable("id") Long id, String password) {
+    public ResponseEntity<String> delPost(@PathVariable("id") Long id, String password) {
         try {
             postService.delPost(id, password);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/post/{id}/edit")
@@ -74,9 +78,9 @@ public class PostController {
         try {
             String hashTag = postService.getHashTagsString(id);
             PostFormDto editingPost = postService.getEditingPost(id);
-            model.addAttribute("post",editingPost);
-            model.addAttribute("hashtag",hashTag);
-        }catch(NoSuchElementException e){
+            model.addAttribute("post", editingPost);
+            model.addAttribute("hashtag", hashTag);
+        } catch (NoSuchElementException e) {
             return "/error/404";
         }
         return "/post/postEditForm";
@@ -84,25 +88,50 @@ public class PostController {
 
     @PostMapping("/post/{id}/edit")
     @ResponseBody
-    public ResponseEntity editPost(@PathVariable("id") Long id, @RequestBody EditForm obj){
-        log.info("obj = {}",obj);
+    public ResponseEntity<String> editPost(@PathVariable("id") Long id, @RequestBody EditForm obj) {
+        log.info("obj = {}", obj);
         try {
             postService.editPost(id, obj);
-        }catch (NoSuchElementException e){
-            log.info("id = {}, obj = {}",id,obj);
+        } catch (NoSuchElementException e) {
+            log.info("id = {}, obj = {}", id, obj);
             e.getStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-       return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     //'/post/'+id + '/pwdCheck',
     @PostMapping("/post/{id}/pwdCheck")
     @ResponseBody
-    public ResponseEntity pwdCheck(@PathVariable("id")Long id,String password){
-        log.info("password = {}",password);
+    public ResponseEntity<String> pwdCheck(@PathVariable("id") Long id, String password) {
+        log.info("password = {}", password);
         boolean flag = postService.countByPassword(id, password);
-        if(flag) return new ResponseEntity(HttpStatus.OK);
-        else return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        if (flag) return new ResponseEntity<>(HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/post/{id}/addComment")
+    @ResponseBody
+    public ResponseEntity<String> addComment(@PathVariable("id") Long id, @RequestBody CommentForm comment) {
+        try {
+            postService.addComment(id, comment);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/comment/{id}/del")
+    @ResponseBody
+    public ResponseEntity<String> delComment(@PathVariable("id") Long id,String password){
+        log.info("id = {} , password = {}",id,password);
+        try {
+            postService.delComment(id, password);
+            return new ResponseEntity<>("삭제되었습니다.",HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            log.info("id = {} , password = {}",id,password);
+            e.getStackTrace();
+            return new ResponseEntity<>("비밀번호를 다시 확인해주세요.",HttpStatus.BAD_REQUEST);
+        }
     }
 }

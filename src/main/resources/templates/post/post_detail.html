@@ -51,28 +51,32 @@
             <h3 class="singleProject__subtitle">댓글</h3>
             <h5 class="project--rating">
               <span th:text="|좋아요 : ${post.likes} From (${post.viewed})|"></span>
-            </h5>
+            </h5><hr>
 
             <form class="form" action="#" method="POST">
               <!-- Textarea -->
               <div class="form__field">
-                <label for="formInput#textarea">Comments: </label>
-                <textarea class="input input--textarea" name="message" id="formInput#textarea"
+                <span><input type="text" name="writer" id="writer" placeholder="작성자"/>
+                      <input type="password" name="password" id="password" placeholder="비밀번호">
+                </span>
+                <label for="content">Comments: </label>
+                <textarea class="input input--textarea" name="message" id="content"
                   placeholder="댓글을 남겨주세요"></textarea>
               </div>
-              <input class="btn btn--sub btn--lg" type="submit" value="작성" />
+              <input class="btn btn--sub btn--lg" type="button" th:onclick="addComment([[${post.postId}]])" value="작성" />
             </form>
-            <div class="commentList">
-              <div class="comment">
+            <br>
+            <hr>
+            <div class="commentList" >
+              <div class="comment" th:each="c : ${comments}">
                 <div class="comment__details">
-                  <a href="profile.html" class="comment__author">댓글 작성자</a>
-                  <p class="comment__info">
+                  <a class="comment__author" th:text="${c.writer}">댓글 작성자</a><span th:text="| on (${c.created})|"></span>
+                  <button class="tag tag--pill tag--main settings__btn" th:onclick="delComment([[${c.id}]])">삭제</button>
+<!--                  <i class="im im-x-mark-circle-o"></i>-->
+                  <p class="comment__info" th:text="${c.content}">
                     댓글 본문 영역
                   </p>
                 </div>
-              </div>
-              <div class="comment">
-
               </div>
             </div>
           </div>
@@ -83,4 +87,24 @@
   </main>
 </body>
 <script th:src="@{/js/post.js}"></script>
+<script th:src="@{/js/comment.js}"></script>
+<script th:inline="javascript">
+function delComment(cId){
+    let inputPwd = prompt("비밀번호를 입력해주세요.");
+    let nextUrl = "/comment/"+cId+"/del";
+    $.ajax({
+        type: 'post',
+        url: nextUrl,
+        data: "password="+inputPwd,
+        success: function(result){
+            alert(result);
+            window.location.reload();
+        },
+        error: function(error){
+            console.log(error);
+            alert(error.responseText);
+        }
+    })
+}
+</script>
 </html>

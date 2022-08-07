@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import nts.assignment.domain.Post;
+import nts.assignment.domain.QComment;
 import nts.assignment.domain.QPost;
 import nts.assignment.domain.dto.*;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static nts.assignment.domain.QComment.comment;
 import static nts.assignment.domain.QPost.post;
 
 
