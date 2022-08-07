@@ -71,6 +71,8 @@
               <div class="comment" th:each="c : ${comments}">
                 <div class="comment__details">
                   <a class="comment__author" th:text="${c.writer}">댓글 작성자</a><span th:text="| on (${c.created})|"></span>
+                  <button class="tag tag--pill tag--main settings__btn" th:onclick="delComment([[${c.id}]])">삭제</button>
+<!--                  <i class="im im-x-mark-circle-o"></i>-->
                   <p class="comment__info" th:text="${c.content}">
                     댓글 본문 영역
                   </p>
@@ -86,4 +88,23 @@
 </body>
 <script th:src="@{/js/post.js}"></script>
 <script th:src="@{/js/comment.js}"></script>
+<script th:inline="javascript">
+function delComment(cId){
+    let inputPwd = prompt("비밀번호를 입력해주세요.");
+    let nextUrl = "/comment/"+cId+"/del";
+    $.ajax({
+        type: 'post',
+        url: nextUrl,
+        data: "password="+inputPwd,
+        success: function(result){
+            alert(result);
+            window.location.reload();
+        },
+        error: function(error){
+            console.log(error);
+            alert(error.responseText);
+        }
+    })
+}
+</script>
 </html>

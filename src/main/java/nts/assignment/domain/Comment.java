@@ -39,4 +39,9 @@ public class Comment {
         post.getComments().add(this);
         this.post = post;
     }
+
+    public void delComment(){
+        this.content = "삭제된 댓글입니다.";
+        modified = LocalDateTime.now();
+    }
 }

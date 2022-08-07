@@ -30,3 +30,21 @@ function addComment(pId){
         }
     })
 }
+
+function delComment(cId){
+    let inputPwd = prompt("비밀번호를 입력해주세요.");
+    let nextUrl = "/comment/"+cId+"/del";
+    $.ajax({
+        type: 'post',
+        url: nextUrl,
+        data: "password="+inputPwd,
+        success: function(result){
+            console.log(result);
+            alert(result);
+        },
+        error: function(error){
+            console.log(error);
+            alert(error);
+        }
+    })
+}

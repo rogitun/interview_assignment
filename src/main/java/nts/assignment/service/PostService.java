@@ -164,4 +164,15 @@ public class PostService {
     public List<CommentDto> getComments(Long id) {
         return commentRepository.findCommentByPostId(id);
     }
+
+    @Transactional
+    public void delComment(Long id, String password) {
+        Optional<Comment> cmt = commentRepository.findById(id);
+        Comment comment = cmt.orElseThrow();
+
+        if(passwordEncoder.matches(password,comment.getPassword())){
+            comment.delComment();
+        }
+        else throw new NoSuchElementException();
+    }
 }

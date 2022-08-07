@@ -35,7 +35,7 @@ public class Dummies {
 
 
         for(int i=0;i<5;i++) {
-            Comment comment = new Comment("writer"+i,"pwd"+i,"content"+i,post);
+            Comment comment = new Comment("writer"+i,passwordEncoder.encode("pwd"+i),"content"+i,post);
             commentRepository.save(comment);
         }
     }

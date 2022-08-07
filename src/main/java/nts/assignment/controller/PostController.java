@@ -120,4 +120,18 @@ public class PostController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping("/comment/{id}/del")
+    @ResponseBody
+    public ResponseEntity<String> delComment(@PathVariable("id") Long id,String password){
+        log.info("id = {} , password = {}",id,password);
+        try {
+            postService.delComment(id, password);
+            return new ResponseEntity<>("삭제되었습니다.",HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            log.info("id = {} , password = {}",id,password);
+            e.getStackTrace();
+            return new ResponseEntity<>("비밀번호를 다시 확인해주세요.",HttpStatus.BAD_REQUEST);
+        }
+    }
 }
