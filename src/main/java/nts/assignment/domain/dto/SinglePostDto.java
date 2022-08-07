@@ -20,10 +20,9 @@ public class SinglePostDto {
 
     private int viewed;
     private int likes;
-    private int isNew;
 
     @QueryProjection
-    public SinglePostDto(Long post_id, String title, String writer, String content, LocalDateTime created, LocalDateTime modified, int viewed, int likes, int isNew) {
+    public SinglePostDto(Long post_id, String title, String writer, String content, LocalDateTime created, LocalDateTime modified, int viewed, int likes) {
         this.postId = post_id;
         this.title = title;
         this.writer = writer;
@@ -32,6 +31,5 @@ public class SinglePostDto {
         this.modified = modified.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
         this.viewed = viewed;
         this.likes = likes;
-        this.isNew = isNew;
     }
 }

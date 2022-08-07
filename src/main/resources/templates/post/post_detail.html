@@ -71,7 +71,7 @@
               <div class="comment" th:each="c : ${comments}">
                 <div class="comment__details">
                   <a class="comment__author" th:text="${c.writer}">댓글 작성자</a><span th:text="| on (${c.created})|"></span>
-                  <button class="tag tag--pill tag--main settings__btn" th:onclick="delComment([[${c.id}]])">삭제</button>
+                  <a class="tag tag--pill tag--main settings__btn" th:onclick="delComment([[${c.id}]])">삭제</a>
 <!--                  <i class="im im-x-mark-circle-o"></i>-->
                   <p class="comment__info" th:text="${c.content}">
                     댓글 본문 영역

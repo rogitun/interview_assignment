@@ -33,6 +33,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .orderBy(post.created.desc())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(post.count())
@@ -43,7 +44,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     @Override
     public Optional<SinglePostDto> getSinglePost(Long id) {
-        SinglePostDto singlePost = queryFactory.select(new QSinglePostDto(post.postId, post.title, post.writer, post.content, post.created, post.modified, post.viewed, post.likes, post.isNew))
+        SinglePostDto singlePost = queryFactory.select(new QSinglePostDto(post.postId, post.title, post.writer, post.content, post.created, post.modified, post.viewed, post.likes))
                 .from(post)
                 .where(post.postId.eq(id))
                 .fetchOne();
@@ -66,6 +67,18 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(QPost.post)
                 .where(QPost.post.postId.eq(id), QPost.post.password.eq(pwd))
                 .fetchOne();
+
+        return Optional.ofNullable(post);
+    }
+
+    @Override
+    public Optional<Post> findPostWithComments(Long id) {
+        Post post = queryFactory.select(QPost.post)
+                .from(QPost.post)
+                .leftJoin(QPost.post.comments, comment).fetchJoin()
+                .where(QPost.post.postId.eq(id))
+                .fetchOne();
+
 
         return Optional.ofNullable(post);
     }

@@ -17,4 +17,6 @@ public interface PostRepositoryCustom {
 
     Optional<PostFormDto> findPostByPassword(Long id);
     Optional<Post> findPostByCredential(Long id, String pwd);
+
+    Optional<Post> findPostWithComments(Long id);
 }

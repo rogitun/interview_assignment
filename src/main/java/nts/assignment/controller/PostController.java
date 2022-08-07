@@ -2,7 +2,9 @@ package nts.assignment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nts.assignment.domain.Comment;
 import nts.assignment.domain.Hashtag;
+import nts.assignment.domain.Post;
 import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -42,15 +45,37 @@ public class PostController {
     }
 
 
+//    @GetMapping("/post/{id}")
+//    public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
+//        SinglePostDto singlePost;
+//        List<Hashtag> hashtags;
+//        List<CommentDto> comments;
+//        try {
+//            singlePost = postService.getSinglePost(id);
+//            hashtags = postService.getHashTags(id);
+//            comments = postService.getComments(id);
+//        } catch (NoSuchElementException e) {
+//            log.info("e");
+//            resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
+//            return "/error/404";
+//        }
+//        model.addAttribute("comments",comments);
+//        model.addAttribute("post", singlePost);
+//        model.addAttribute("hashtags", hashtags);
+//        return "/post/post_detail";
+//    }
+
     @GetMapping("/post/{id}")
     public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
         SinglePostDto singlePost;
         List<Hashtag> hashtags;
         List<CommentDto> comments;
         try {
-            singlePost = postService.getSinglePost(id);
+            Post post = postService.getSinglePost(id);
+            singlePost = new SinglePostDto(post.getPostId(), post.getTitle(), post.getWriter(), post.getContent(), post.getCreated(), post.getModified()
+                    , post.getViewed(), post.getLikes());
+            comments = postService.getCommentDtos(post.getComments());
             hashtags = postService.getHashTags(id);
-            comments = postService.getComments(id);
         } catch (NoSuchElementException e) {
             log.info("e");
             resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
@@ -61,6 +86,7 @@ public class PostController {
         model.addAttribute("hashtags", hashtags);
         return "/post/post_detail";
     }
+
 
     @PostMapping("/post/{id}/del")
     @ResponseBody

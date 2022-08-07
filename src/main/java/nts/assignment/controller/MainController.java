@@ -24,6 +24,9 @@ public class MainController {
     @GetMapping("/")
     public String main(Model model, Pageable pageable){
         Page<MainPostDto> allPost = postService.getAllPost(pageable);
+        Long commentSize = postService.countAllComment();
+        model.addAttribute("commentCount",commentSize);
+        model.addAttribute("postCount",allPost.getTotalElements());
         model.addAttribute("posts",allPost);
         return "/main/main.html";
     }

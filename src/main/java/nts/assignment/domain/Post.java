@@ -33,7 +33,7 @@ public class Post {
 
     private int viewed;
     private int likes;
-    private int isNew;
+    private boolean isNew;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     @Builder.Default
@@ -50,5 +50,9 @@ public class Post {
         this.writer = writer;
         modified = LocalDateTime.now();
         hashtags.clear();
+    }
+
+    public void updateView() {
+        this.viewed++;
     }
 }

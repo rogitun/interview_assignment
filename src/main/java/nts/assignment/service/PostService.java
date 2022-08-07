@@ -25,9 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -59,10 +57,14 @@ public class PostService {
         return build;
     }
 
+    //TODO 쿼리 과다
     private void makeHashTags(String hashtag, Post post) {
         String[] hashtags = hashtag.split("#");//해쉬태그 구분
+        hashtags = Arrays.stream(hashtags).map(s -> s = s.replaceAll(" ","")).toArray(String[]::new);
+        hashtags = Arrays.stream(hashtags).distinct().toArray(String[]::new);
+
         for (String s : hashtags) {
-            s = s.replaceAll(" ", "");//공백 제거
+          //  s = s.replaceAll(" ", "");//공백 제거
             Optional<Hashtag> hashTag = hashtagRepository.findByName(s);
 
             if (hashTag.isPresent()) { //기존에 존재하는 hashTag, 연관관계 매핑
@@ -82,9 +84,20 @@ public class PostService {
         return postRepository.getAllPost(pageable);
     }
 
-    public SinglePostDto getSinglePost(Long id) {
-        Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
-        return singlePost.orElseThrow();
+//    public SinglePostDto getSinglePost(Long id) {
+//        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
+//
+////        Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
+////        return singlePost.orElseThrow();
+//    }
+
+    @Transactional
+    public Post getSinglePost(Long id) {
+        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
+        Post post = postWithComments.orElseThrow();
+        postRepository.updateView(id);
+       // post.updateView();
+        return post;
     }
 
     @Transactional
@@ -161,10 +174,6 @@ public class PostService {
         commentRepository.save(newComment);
     }
 
-    public List<CommentDto> getComments(Long id) {
-        return commentRepository.findCommentByPostId(id);
-    }
-
     @Transactional
     public void delComment(Long id, String password) {
         Optional<Comment> cmt = commentRepository.findById(id);
@@ -174,5 +183,18 @@ public class PostService {
             comment.delComment();
         }
         else throw new NoSuchElementException();
+    }
+
+    public Long countAllComment() {
+        return commentRepository.count();
+    }
+
+    public List<CommentDto> getCommentDtos(List<Comment> comments) {
+        List<CommentDto> commentDtos = new LinkedList<>();
+        for (Comment comment : comments) {
+            CommentDto commentDto = new CommentDto(comment.getCommentId(), comment.getWriter(), comment.getContent(), comment.getCreated());
+            commentDtos.add(commentDto);
+        }
+        return commentDtos;
     }
 }

@@ -24,7 +24,10 @@
     <section class="hero-section text-center">
         <div class="container container--narrow">
             <div class="hero-section__box">
-                <h2>게시글을 검색해보세요!<span></span></h2>
+                <h2>게시글을 검색해보세요!</h2>
+                <span>
+                    <h5 th:text="|전체 게시글 : ${postCount} & 전체 댓글 : ${commentCount}|">게시글 수</h5>
+                </span>
             </div>
 
             <div class="hero-section__search">
@@ -41,18 +44,23 @@
         </div>
     </section>
     <div class="card text-center" th:each="p : ${posts}">
-        <div class="card-body">
+        <div class="card-body" style="display: inline;">
+            <span style="color:red" th:if="${p.isNew}" th:text="|[NEW!]|"></span>&nbsp;
+            <a th:href="@{/post/{id}(id=${p.post_id})}">
+                <h3 class="project__title" th:text="${p.title}"></h3>
+            </a>
+            <span th:text="| [${p.commentSize}] |"> </span>
+            &nbsp;&nbsp;
             <span class="tag tag--pill tag--main">
-                    <small th:text="${p.writer}"></small>
+                <small th:text="${p.writer}"></small>
             </span>
-            <a th:href="@{/post/{id}(id=${p.post_id})}"><h3 class="project__title" th:text="${p.title}">제목 <span th:if="${p.comments.size==0]" th:text="(0)"></span></h3></a>
         </div>
         <div class="card-header">
             <ul class="nav nav-pills card-header-pills">
             <span>
-                <a style="font-weight: bold;" th:text="|좋아요 : (${p.likes})|"></a>
-                <a style="font-weight: bold;">조회수 : <span class="project--rating">(1)</span></a>
-                <a style="font-weight: bold;">등록일 : <span class="project--rating" th:text="${p.created}">(2022-08-15)</span></a>
+                <a style="font-weight: bold;">좋아요 : </a><span class="project--rating" th:text="| (${p.likes})|"></span>&nbsp;
+                <a style="font-weight: bold;">조회수 : <span class="project--rating" th:text="| (${p.viewed})|"></span></a>&nbsp;
+                <a style="font-weight: bold;">등록일 : <span class="project--rating" th:text="| ${p.created}|"></span></a>
             </span>
             </ul>
         </div>

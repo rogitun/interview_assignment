@@ -20,12 +20,12 @@ public class MainPostDto {
 
     private int viewed;
     private int likes;
-    private int isNew;
+    private boolean isNew;
 
     private int commentSize;
 
     @QueryProjection
-    public MainPostDto(Long post_id, String title, String writer, LocalDateTime created, LocalDateTime modified, int viewed, int likes, int isNew, int commentSize) {
+    public MainPostDto(Long post_id, String title, String writer, LocalDateTime created, LocalDateTime modified, int viewed, int likes, boolean isNew, int commentSize) {
         this.post_id = post_id;
         this.title = title;
         this.writer = writer;
@@ -33,7 +33,13 @@ public class MainPostDto {
         this.modified = modified.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
         this.viewed = viewed;
         this.likes = likes;
-        this.isNew = isNew;
+        this.isNew = calcDate(created);
         this.commentSize = commentSize;
+    }
+
+    public boolean calcDate(LocalDateTime created) {
+        final int day = 86400;
+        int second = created.getSecond();
+        return (second / day) < 3;
     }
 }
