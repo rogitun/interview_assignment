@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS anonymous_like;
 DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS hashtag_post;
 DROP TABLE IF EXISTS post;
@@ -29,6 +30,16 @@ create table comment (
     primary key (comment_id),
     FOREIGN key (post_id) REFERENCES post (post_id)
 );
+
+create table anonymous_like(
+    anonymous_like_id bigint not null AUTO_INCREMENT,
+    ip_address varchar(127) not null,
+    post_id bigint not null,
+    action_date timestamp,
+    primary key (anonymous_like_id),
+    FOREIGN key (post_id) REFERENCES post (post_id)
+);
+
 
 create table hashtag (
     hashtag_id bigint not null AUTO_INCREMENT,

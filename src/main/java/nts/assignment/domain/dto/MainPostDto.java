@@ -4,6 +4,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -39,7 +40,7 @@ public class MainPostDto {
 
     public boolean calcDate(LocalDateTime created) {
         final int day = 86400;
-        int second = LocalDateTime.now().getSecond() - created.getSecond();
-        return (second / day) < 3;
+        Duration duration = Duration.between(created,LocalDateTime.now());
+        return (duration.getSeconds() / day) < 3;
     }
 }

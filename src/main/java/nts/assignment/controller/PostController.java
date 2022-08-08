@@ -18,11 +18,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,27 +46,6 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-//    @GetMapping("/post/{id}")
-//    public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
-//        SinglePostDto singlePost;
-//        List<Hashtag> hashtags;
-//        List<CommentDto> comments;
-//        try {
-//            singlePost = postService.getSinglePost(id);
-//            hashtags = postService.getHashTags(id);
-//            comments = postService.getComments(id);
-//        } catch (NoSuchElementException e) {
-//            log.info("e");
-//            resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
-//            return "/error/404";
-//        }
-//        model.addAttribute("comments",comments);
-//        model.addAttribute("post", singlePost);
-//        model.addAttribute("hashtags", hashtags);
-//        return "/post/post_detail";
-//    }
-
     @GetMapping("/post/{id}")
     public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
         SinglePostDto singlePost;
@@ -81,7 +62,7 @@ public class PostController {
             resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
             return "/error/404";
         }
-        model.addAttribute("comments",comments);
+        model.addAttribute("comments", comments);
         model.addAttribute("post", singlePost);
         model.addAttribute("hashtags", hashtags);
         return "/post/post_detail";
@@ -149,15 +130,42 @@ public class PostController {
 
     @PostMapping("/comment/{id}/del")
     @ResponseBody
-    public ResponseEntity<String> delComment(@PathVariable("id") Long id,String password){
-        log.info("id = {} , password = {}",id,password);
+    public ResponseEntity<String> delComment(@PathVariable("id") Long id, String password) {
+        log.info("id = {} , password = {}", id, password);
         try {
             postService.delComment(id, password);
-            return new ResponseEntity<>("삭제되었습니다.",HttpStatus.OK);
-        }catch (NoSuchElementException e){
-            log.info("id = {} , password = {}",id,password);
+            return new ResponseEntity<>("삭제되었습니다.", HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            log.info("id = {} , password = {}", id, password);
             e.getStackTrace();
-            return new ResponseEntity<>("비밀번호를 다시 확인해주세요.",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("비밀번호를 다시 확인해주세요.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/post/{id}/like")
+    @ResponseBody
+    public ResponseEntity<String> likePost(@PathVariable("id") Long id, HttpServletRequest req, String operation) {
+        //Interceptor 처리
+        //IP 주소 넘어온다.
+        String ip = (String) req.getAttribute("IP");
+        if (operation.equals("add")) {
+            try {
+                boolean flag = postService.likePost(id, ip);
+                if (flag) return new ResponseEntity<>("추천되었습니다.", HttpStatus.OK);
+                else return new ResponseEntity<>("이미 추천/비추천 게시글입니다.", HttpStatus.FORBIDDEN);
+            } catch (NoSuchElementException e) {
+                log.info("게시글 삭제되어 추천 불가능");
+                return new ResponseEntity<>("삭제된 게시글입니다.", HttpStatus.BAD_REQUEST);
+            }
+        } else if (operation.equals("sub")) {
+            try {
+                boolean flag = postService.disLikePost(id, ip);
+                if (flag) return new ResponseEntity<>("비추천 되었습니다.", HttpStatus.OK);
+                else return new ResponseEntity<>("이미 추천/비추천 한 게시글입니다.", HttpStatus.FORBIDDEN);
+            } catch (NoSuchElementException e) {
+                log.info("게시글 삭제되어 추천 불가능");
+                return new ResponseEntity<>("삭제된 게시글입니다.", HttpStatus.BAD_REQUEST);
+            }
+        } else return new ResponseEntity<>("잘못된 접근입니다.", HttpStatus.BAD_REQUEST);
     }
 }
