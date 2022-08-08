@@ -1,21 +1,29 @@
+database: ntsdb
+
 spring:
+  profiles:
+    active: dev
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
         format_sql: 'true'
-
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
+
 
   datasource:
-    schema: classpath*:db/schema.sql
+    initialization-mode: always
+    #schema: classpath:db/ntsdb/schema.sql
     password: ghkd0045
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     url: jdbc:mysql://localhost:3306/nts?serverTimezone=Asia/Seoul
-#    initialization-mode: always
+
+  sql:
+    init:
+      mode: always
 
 logging:
   level:

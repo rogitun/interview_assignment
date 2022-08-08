@@ -15,9 +15,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "post")
 public class Post {
 
     @Id @GeneratedValue
+    @Column(name = "post_id")
     private Long postId;
 
     private String title;
@@ -33,6 +35,8 @@ public class Post {
 
     private int viewed;
     private int likes;
+
+    @Column(name = "is_new")
     private boolean isNew;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Comment {
     @Id @GeneratedValue
+    @Column(name = "comment_id")
     private Long commentId;
 
     private String writer;
@@ -27,7 +28,7 @@ public class Comment {
     private int likes;
 
     @ManyToOne
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     public Comment(String writer, String password, String content,Post post) {

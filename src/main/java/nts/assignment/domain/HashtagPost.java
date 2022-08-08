@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class HashtagPost {
 
     @Id @GeneratedValue
+    @Column(name = "hashtag_post_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -16,7 +17,7 @@ public class HashtagPost {
     private Hashtag hashtag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     public HashtagPost(Hashtag hashtag, Post post) {
