@@ -16,18 +16,6 @@ import java.util.Optional;
 @Slf4j
 public class PostLikeInterceptor implements HandlerInterceptor {
 
-    private AnonymousLikeRepository repository;
-    private PostRepository postRepository;
-    private AddLikeComp addLikeComp;
-
-    final int DAY = 86400;
-    final int MINUTE = 60;
-
-    public PostLikeInterceptor(AnonymousLikeRepository repository,PostRepository postRepository) {
-        this.repository = repository;
-        this.postRepository = postRepository;
-    }
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String requestURI = request.getRequestURI(); // => /post/{id}/like
