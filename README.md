@@ -3,7 +3,8 @@
 <h5>게시글과 댓글 기능을 가진 게시판 구현</h5>
 
 # ERD
-![erd](https://user-images.githubusercontent.com/81704910/183257328-d1e083a6-c64d-4dc6-b645-7eb95d602915.png)
+![erd2](https://user-images.githubusercontent.com/81704910/183444283-d74bb77d-2a91-45a6-84d2-7782917eadd2.png)
+
 
 
 # 기술 스택
