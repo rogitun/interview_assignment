@@ -56,7 +56,10 @@ public class Post {
         hashtags.clear();
     }
 
-    public void updateView() {
-        this.viewed++;
+    public void addLike() {
+        this.likes++;
+    }
+
+    public void disLike() { this.likes--;
     }
 }
