@@ -14,6 +14,9 @@
     <!-- Dev Search UI -->
     <link th:href="@{/css/styles/app.css}" rel="stylesheet"/>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -27,14 +30,22 @@
                 <h2>게시글을 검색해보세요!</h2>
                 <span>
                     <h5 th:text="|전체 게시글 : ${postCount} & 전체 댓글 : ${commentCount}|">게시글 수</h5>
+                    <h3 th:if="${searchCount!=null && postCount != searchCount}" th:text="|검색된 게시글 : ${searchCount}|"></h3>
                 </span>
             </div>
 
             <div class="hero-section__search">
                 <form class="form" action="#" method="get">
+                    <select name="category" id="select" th:field="${cond.category}">
+                        <option value="">분류 선택</option>
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="writer">작성자</option>
+                        <option value="hashtag">해시태그</option>
+                    </select>
                     <div class="form__field">
-                        <label for="formInput#search"></label>
-                        <input class="input input--text" id="formInput#search" type="text" name="text"
+                        <label for="search"></label>
+                        <input class="input input--text" id="search" type="text" name="search" th:field="${cond.search}"
                                placeholder="제목, 작성자, 해시태그, 내용 등"/>
                     </div>
 
@@ -68,22 +79,29 @@
     <div class="pagination">
         <ul class="container" th:with="start = ${paging.first}, last=${paging.end}">
             <li th:style="${posts.first} ? 'display:none'">
-                <a th:href="@{/(page=${paging.number})}" class="btn">&#10094; Prev</a>
+<!--                <a th:href="@{/(page=${paging.number})}" class="btn">&#10094; Prev</a>-->
+                <a th:onclick="nextPage([[${paging.number}]])" class="btn">&#10094; Prev</a>
             </li>
+            <input th:id="curPage" th:value="${paging.number}" hidden/>
+<!--            <li  th:each="p : ${#numbers.sequence(start,last)}">-->
+<!--                <a th:if="${p==paging.number+1}" th:href="@{/(page=${p})}" class="btn btn&#45;&#45;sub" th:text="${p}"></a>-->
+<!--                <a th:if="${p!=paging.number+1}" th:href="@{/(page=${p})}" class="btn" th:text="${p}">     </a>-->
+<!--            </li>-->
 
             <li  th:each="p : ${#numbers.sequence(start,last)}">
-                <a th:if="${p==paging.number+1}" th:href="@{/(page=${p})}" class="btn btn--sub" th:text="${p}"></a>
-                <a th:if="${p!=paging.number+1}" th:href="@{/(page=${p})}" class="btn" th:text="${p}">     </a>
+<!--                <a th:if="${p==paging.number+1}" th:onclick="nextPage([[${p}]])" class="btn btn&#45;&#45;sub" th:text="${p}"></a>-->
+                <a th:onclick="nextPage([[${p}]])" class="btn" th:id="|page${p}|" th:text="${p}">     </a>
             </li>
 
 
             <li th:style="${posts.last}? 'display:none'">
-                <a th:href="@{/(page=${posts.number+2})}" class="btn">Next &#10095;</a>
+<!--                <a th:href="@{/(page=${posts.number+2})}" class="btn">Next &#10095;</a>-->
+                <a th:onclick="nextPage([[${paging.number+2}]])" class="btn">Next &#10095;</a>
             </li>
 
         </ul>
     </div>
 </main>
 </body>
-
+<script th:src="@{/js/main.js}"></script>
 </html>

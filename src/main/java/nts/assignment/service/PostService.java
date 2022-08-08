@@ -2,6 +2,7 @@ package nts.assignment.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nts.assignment.controller.dto.SearchCond;
 import nts.assignment.domain.Comment;
 import nts.assignment.domain.Hashtag;
 import nts.assignment.domain.HashtagPost;
@@ -80,8 +81,8 @@ public class PostService {
         }
     }
 
-    public Page<MainPostDto> getAllPost(Pageable pageable) {
-        return postRepository.getAllPost(pageable);
+    public Page<MainPostDto> getAllPost(Pageable pageable, SearchCond cond) {
+        return postRepository.getAllPost(pageable,cond);
     }
 
 //    public SinglePostDto getSinglePost(Long id) {
@@ -196,5 +197,9 @@ public class PostService {
             commentDtos.add(commentDto);
         }
         return commentDtos;
+    }
+
+    public Long countAllPost() {
+        return postRepository.count();
     }
 }

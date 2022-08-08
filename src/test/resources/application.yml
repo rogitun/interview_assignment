@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: test
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: 'true'
+
+    hibernate:
+      ddl-auto: none
+
+  datasource:
+    initialization-mode: always
+    password: ghkd0045
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://localhost:3306/nts?serverTimezone=Asia/Seoul
+
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.hibernate: ERROR
+
+thymeleaf:
+  prefix=classpath: templates/
+  suffix: .html
+  check-template-location: true
+  cache: false
+  mvc:
+    static-path-pattern: "/static/**"
+
+Secret:
+  key: "Hansel970901"

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class Dummies {

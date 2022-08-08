@@ -1,5 +1,6 @@
 package nts.assignment.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import nts.assignment.controller.dto.SearchCond;
 import nts.assignment.domain.*;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -95,7 +97,6 @@ class PostRepositoryTest {
     }
 
     @BeforeEach
-    @Rollback(value = false)
     public void init(){
         Hashtag hashtag = new Hashtag("testHash");
         hashtagRepository.save(hashtag);
@@ -140,27 +141,37 @@ class PostRepositoryTest {
     @Test
     public void searchTest() {
 
-        //검색 조건 주어짐
-        SearchCond searchCond = new SearchCond();
-        searchCond.setTitle("title");
-
-        PageRequest pageRequest = PageRequest.of(0,6);
-
-        List<Post> fetch = jpaQueryFactory.select(post)
-                .from(post)
-                .leftJoin(post.hashtags, hashtagPost).fetchJoin()
-                .leftJoin(hashtagPost.hashtag, hashtag).fetchJoin()
-                .where(post.title.eq(searchCond.getTitle()))
-                .fetch();
-
-        System.out.println("size = " + fetch.size());
-
-        for (Post fetch1 : fetch) {
-            System.out.println(fetch1.getTitle() + " " + fetch1.getHashtags().size());
-        }
+//        //검색 조건 주어짐
+//        SearchCond searchCond = new SearchCond();
+//        searchCond.setTitle("Second");
+//
+//        PageRequest pageRequest = PageRequest.of(0,6);
+//
+//        Post post = jpaQueryFactory.select(QPost.post)
+//                .from(QPost.post)
+//                .leftJoin(QPost.post.hashtags, hashtagPost).fetchJoin()
+//                .leftJoin(hashtagPost.hashtag, hashtag).fetchJoin()
+//                .where(QPost.post.title.contains(searchCond.getTitle()))
+//                .fetchOne();
+//
+//        List<HashtagPost> hashtags = post.getHashtags();
+//        for (HashtagPost hashtag : hashtags) {
+//            Hashtag hashtag1 = hashtag.getHashtag();
+//            System.out.println(hashtag1.getName());
+//        }
 
 
         //해당 검색 조건을 포함하여 페이징한 결과
+    }
 
+    @Test
+    public void countTest(){
+        List<Tuple> fetch = jpaQueryFactory.select(post.count(), hashtag.count()).distinct()
+                .from(post, hashtag)
+                .fetch();
+
+        for (Tuple tuple : fetch) {
+            System.out.println(tuple.toString());
+        }
     }
 }
