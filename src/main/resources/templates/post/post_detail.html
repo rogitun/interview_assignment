@@ -30,7 +30,7 @@
                 <h3 class="singleProject__subtitle">해시태그</h3>
                 <div class="singleProject__toolStack">
             <span class="tag tag--pill tag--sub tag--lg" th:each="h : ${hashtags}">
-              <small th:text="|#${h.name}|">해쉬태그1</small>
+              <small th:text="|#${h}|">해쉬태그1</small>
             </span>
                     <!--            <span class="tag tag&#45;&#45;pill tag&#45;&#45;sub tag&#45;&#45;lg">-->
                     <!--              <small>해쉬태그2</small>-->
@@ -49,18 +49,20 @@
                 <div class="singleProject__info" th:text="${post.content}"></div>
 
 
-                <span>
-                    <button class="tag tag--pill tag--main settings__btn" th:onclick="like([[${post.postId}]])" type="button">좋아요!</button>
-                    <button class="tag tag--pill tag--main settings__btn" th:onclick="disLike([[${post.postId}]])" type="button">싫어요!</button>
-                </span>
-
                 <div class="comments">
+                    <span>
+                    <button class="tag tag--pill tag--main settings__btn" th:onclick="likePost([[${post.postId}]])"
+                            type="button">좋아요!</button>
+                    <button class="tag tag--pill tag--main settings__btn" th:onclick="disLikePost([[${post.postId}]])"
+                            type="button">싫어요!</button>
+                </span>
+                    <br>
+
                     <h3 class="singleProject__subtitle">댓글</h3>
                     <h5 class="project--rating">
                         <span th:text="|좋아요 : ${post.likes} From (${post.viewed})|"></span>
                     </h5>
                     <hr>
-
                     <form class="form" action="#" method="POST">
                         <!-- Textarea -->
                         <div class="form__field">
@@ -76,20 +78,23 @@
                     </form>
                     <br>
                     <hr>
-                    <div class="commentList">
+                    <div class="commentList" id="commentList">
                         <div class="comment" th:each="c : ${comments}">
                             <div class="comment__details">
-                                <a class="comment__author" th:text="${c.writer}">댓글 작성자</a><span
-                                    th:text="| on (${c.created})|"></span>
+                                <a class="comment__author" th:text="${c.writer}">댓글 작성자</a>
+                                <span th:text="| on (${c.created})|"></span>
                                 <a class="tag tag--pill tag--main settings__btn"
                                    th:onclick="delComment([[${c.id}]])">삭제</a>
                                 <!--                  <i class="im im-x-mark-circle-o"></i>-->
-                                <p class="comment__info" th:text="${c.content}">
+                                <p class="comment__info" th:text="${c.content}" th:id="|content_${c.id}|">
                                     댓글 본문 영역
                                 </p>
                             </div>
                         </div>
                     </div>
+                    <a th:if="${comments.hasContent()}" th:onclick="showMoreCmt([[${post.postId}]])"
+                       th:text="|더 보기|"></a>
+                    <input id="nextPage" value="2" hidden/>
                 </div>
             </div>
         </div>
@@ -97,60 +102,7 @@
     </div>
 </main>
 </body>
-<script th:src="@{/js/post.js}"></script>
-<script th:src="@{/js/comment.js}"></script>
-<script th:inline="javascript">
-function delComment(cId){
-    let inputPwd = prompt("비밀번호를 입력해주세요.");
-    let nextUrl = "/comment/"+cId+"/del";
-    $.ajax({
-        type: 'post',
-        url: nextUrl,
-        data: "password="+inputPwd,
-        success: function(result){
-            alert(result);
-            window.location.reload();
-        },
-        error: function(error){
-            console.log(error);
-            alert(error.responseText);
-        }
-    })
-}
-
-
-
-function like(pId){
-    let nextUrl = "/post/"+pId + "/like";
-
-    $.ajax({
-        type: 'post',
-        url : nextUrl,
-        data: "operation=add",
-        success: function(result){
-            alert(result);
-        },
-        error: function(error){
-            alert(error.responseText);
-        }
-    })
-}
-
-function disLike(pId){
-    let nextUrl = "/post/"+pId + "/like";
-
-    $.ajax({
-        type: 'post',
-        url : nextUrl,
-        data: "operation=sub",
-        success: function(result){
-            alert(result);
-        },
-        error: function(error){
-            alert(error.responseText);
-        }
-    })
-}
-
+<script th:src="@{/js/postManage.js}"></script>
+<script th:src="@{/js/commentManage.js}"></script>
 </script>
 </html>

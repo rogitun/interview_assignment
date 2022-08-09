@@ -2,6 +2,7 @@ package nts.assignment.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import nts.assignment.controller.response.CommentResponse;
 import nts.assignment.domain.Comment;
 import nts.assignment.domain.Hashtag;
 import nts.assignment.domain.Post;
@@ -12,6 +13,8 @@ import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,16 +49,40 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+//    @GetMapping("/post/{id}")
+//    public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
+//        SinglePostDto singlePost;
+//        List<Hashtag> hashtags;
+//        List<CommentDto> comments;
+//        try {
+//            //해쉬태그(String만) | 포스트(조인없이) | 댓글 (페이징 5개씩, postId랑 조인)
+//            Post post = postService.getSinglePost(id);
+//            singlePost = new SinglePostDto(post.getPostId(), post.getTitle(), post.getWriter(), post.getContent(), post.getCreated(), post.getModified()
+//                    , post.getViewed(), post.getLikes());
+//            comments = postService.getCommentDtos(post.getComments());
+//            hashtags = postService.getHashTags(id);
+//        } catch (NoSuchElementException e) {
+//            log.info("e");
+//            resp.sendError(HttpStatus.NOT_FOUND.value(), "No Such Content");
+//            return "/error/404";
+//        }
+//        model.addAttribute("comments", comments);
+//        model.addAttribute("post", singlePost);
+//        model.addAttribute("hashtags", hashtags);
+//        return "/post/post_detail";
+//    }
+
     @GetMapping("/post/{id}")
-    public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp) throws IOException {
+    public String viewPost(@PathVariable("id") Long id, Model model, HttpServletResponse resp,
+                           Pageable pageable) throws IOException {
         SinglePostDto singlePost;
-        List<Hashtag> hashtags;
-        List<CommentDto> comments;
+        //List<Hashtag> hashtags;
+        List<String> hashtags;
+        Page<CommentDto> comments;
         try {
-            Post post = postService.getSinglePost(id);
-            singlePost = new SinglePostDto(post.getPostId(), post.getTitle(), post.getWriter(), post.getContent(), post.getCreated(), post.getModified()
-                    , post.getViewed(), post.getLikes());
-            comments = postService.getCommentDtos(post.getComments());
+            //해쉬태그(String만) | 포스트(조인없이) | 댓글 (페이징 5개씩, postId랑 조인)
+            singlePost = postService.getSinglePost(id);
+            comments = postService.getCommentDtos(id, pageable);
             hashtags = postService.getHashTags(id);
         } catch (NoSuchElementException e) {
             log.info("e");
@@ -66,6 +93,31 @@ public class PostController {
         model.addAttribute("post", singlePost);
         model.addAttribute("hashtags", hashtags);
         return "/post/post_detail";
+    }
+
+    @GetMapping("/post/{id}/moreComment")
+    @ResponseBody
+    public ResponseEntity<CommentResponse> getMoreComment(@PathVariable("id") Long id, Pageable pageable) {
+        //댓글을 불러왔을때 2개의 경우로 나눈다.
+        //1. 가져올 댓글이 1개 이상인 경우 => 데이터 보낸다.
+        //2. 가져올 댓글이 없는 경우 => size를 check하여 더 표시할 댓글이 없음을 알린다.
+        Page<CommentDto> commentDtos = postService.getCommentDtos(id, pageable);
+        CommentResponse commentResponse;
+        if (commentDtos.getNumberOfElements() <= 0) {
+            commentResponse = CommentResponse.builder()
+                    .comments(null)
+                    .size(0)
+                    .httpStatus(HttpStatus.NO_CONTENT)
+                    .statusCode(HttpStatus.NO_CONTENT.value()).build();
+        } else {
+            commentResponse = CommentResponse.builder()
+                    .httpStatus(HttpStatus.OK)
+                    .statusCode(HttpStatus.OK.value())
+                    .size(commentDtos.getNumberOfElements())
+                    .comments(commentDtos.getContent())
+                    .build();
+        }
+        return new ResponseEntity<>(commentResponse, commentResponse.getHttpStatus());
     }
 
 

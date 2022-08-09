@@ -47,7 +47,7 @@ public class Dummies {
             postRepository.save(post2);
         }
 
-        for(int i=0;i<5;i++) {
+        for(int i=0;i<13;i++) {
             Comment comment = new Comment("writer"+i,passwordEncoder.encode("pwd"+i),"content"+i,post);
             commentRepository.save(comment);
         }

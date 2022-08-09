@@ -7,6 +7,7 @@ import nts.assignment.domain.*;
 import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.MainPostDto;
 import nts.assignment.domain.dto.PostFormDto;
+import nts.assignment.domain.dto.SinglePostDto;
 import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
@@ -87,21 +88,22 @@ public class PostService {
         return postRepository.getAllPost(pageable, cond);
     }
 
-//    public SinglePostDto getSinglePost(Long id) {
-//        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
-//
-////        Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
-////        return singlePost.orElseThrow();
-//    }
-
     @Transactional
-    public Post getSinglePost(Long id) {
-        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
-        Post post = postWithComments.orElseThrow();
+    public SinglePostDto getSinglePost(Long id) {
+        // Optional<Post> postWithComments = postRepository.findPostWithComments(id);
+        Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
         postRepository.updateView(id);
-        // post.updateView();
-        return post;
+        return singlePost.orElseThrow();
     }
+
+//    @Transactional
+//    public Post getSinglePost(Long id) {
+//        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
+//        Post post = postWithComments.orElseThrow();
+//        postRepository.updateView(id);
+//        // post.updateView();
+//        return post;
+//    }
 
     @Transactional
     public void delPost(Long id, String password) {
@@ -124,7 +126,15 @@ public class PostService {
         //있으면 삭제
     }
 
-    public List<Hashtag> getHashTags(Long id) {
+//    public List<Hashtag> getHashTags(Long id) {
+//        //        log.info("size = {}",hastTags.size());
+////        for (Hashtag hastTag : hastTags) {
+////            log.info("hashTag = {}",hastTag.getName());
+////        }
+//        return hashtagRepository.findHashTagByPostId(id);
+//    }
+
+    public List<String> getHashTags(Long id) {
         //        log.info("size = {}",hastTags.size());
 //        for (Hashtag hastTag : hastTags) {
 //            log.info("hashTag = {}",hastTag.getName());
@@ -139,10 +149,11 @@ public class PostService {
 
 
     public String getHashTagsString(Long id) {
-        List<Hashtag> hastTags = hashtagRepository.findHashTagByPostId(id);
+        //List<Hashtag> hastTags = hashtagRepository.findHashTagByPostId(id);
+        List<String> hastTags = hashtagRepository.findHashTagByPostId(id);
         StringBuilder hash = new StringBuilder();
-        for (Hashtag hastTag : hastTags) {
-            hash.append("#").append(hastTag.getName());
+        for (String hastTag : hastTags) {
+            hash.append("#").append(hastTag);
         }
         return hash.toString();
     }
@@ -177,7 +188,7 @@ public class PostService {
         commentRepository.save(newComment);
     }
 
-    @Transactional
+    @Transactional //TODO 비밀번호만 가져와서 비교하면 조회 쿼리 단순화 가능
     public void delComment(Long id, String password) {
         Optional<Comment> cmt = commentRepository.findById(id);
         Comment comment = cmt.orElseThrow();
@@ -191,17 +202,21 @@ public class PostService {
         return commentRepository.count();
     }
 
-    public List<CommentDto> getCommentDtos(List<Comment> comments) {
-        List<CommentDto> commentDtos = new LinkedList<>();
-        for (Comment comment : comments) {
-            CommentDto commentDto = new CommentDto(
-                    comment.getCommentId(),
-                    comment.getWriter(),
-                    comment.getContent(),
-                    comment.getCreated());
-            commentDtos.add(commentDto);
-        }
-        return commentDtos;
+//    public List<CommentDto> getCommentDtos(List<Comment> comments) {
+//        List<CommentDto> commentDtos = new LinkedList<>();
+//        for (Comment comment : comments) {
+//            CommentDto commentDto = new CommentDto(
+//                    comment.getCommentId(),
+//                    comment.getWriter(),
+//                    comment.getContent(),
+//                    comment.getCreated());
+//            commentDtos.add(commentDto);
+//        }
+//        return commentDtos;
+//    }
+
+    public Page<CommentDto> getCommentDtos(Long id, Pageable pageable) {
+        return commentRepository.findCommentByPostId(id, pageable);
     }
 
     public Long countAllPost() {
