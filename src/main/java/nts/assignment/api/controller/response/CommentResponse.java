@@ -1,4 +1,4 @@
-package nts.assignment.controller.response;
+package nts.assignment.api.controller.response;
 
 import lombok.Builder;
 import lombok.Data;

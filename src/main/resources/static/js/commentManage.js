@@ -21,12 +21,12 @@ function addComment(pId){
         headers: {"Content-Type": "application/json"},
         data: JSON.stringify(comment),
         success: function(result){
-            alert("등록되었습니다.");
+            alert(result);
             window.location.reload();
         },
         error: function(error){
             console.log(error);
-            alert("잘못된 접근입니다.");
+            alert(error.responseText);
         }
     });
 };

@@ -33,15 +33,6 @@ $(document).ready(function(){
     else{
         alert("비밀번호가 일치하지 않습니다.");
     }
-
-//    if(pwd==tryPwd) {
-//        let doc = document.getElementById("formWrap");
-//        doc.style.display = 'block';
-//        break;
-//    }
-//    else{
-//        alert("비밀번호가 일치하지 않습니다.");
-//    }
  }
 })
 
@@ -89,11 +80,11 @@ function edit(pid,encode){
             headers: {"Content-Type": "application/json"},
             data : JSON.stringify(obj),
             success : function(result){
-                alert("변경되었습니다.");
+                alert(result);
                window.location.replace("/post/"+pid);
             },
             error : function(error){
-                alert("변경에 실패했습니다");
+                alert(error.responseText);
             }
         })
 }

@@ -51,7 +51,7 @@ class PostControllerTest {
 
         Comment save = commentRepository.save(comment);
 
-        postService.delComment(save.getCommentId(),"1234");
+       // postService.delComment(save.getCommentId(),"1234");
 
         em.flush();
         em.clear();

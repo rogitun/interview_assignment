@@ -25,4 +25,22 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostRepositor
             "where p.postId = :id")
     void updateView(@Param("id") Long id);
 
+    @Modifying
+    @Query("delete from Post p " +
+            "where p.id = :id")
+    void deleteByPostId(@Param("id") Long id);
+
+    Long countByPostId(Long id);
+
+    @Modifying
+    @Query("update Post p " +
+            "set p.likes = p.likes + 1 " +
+            "where p.id =:id")
+    void updateLike(@Param("id") Long id);
+
+    @Modifying
+    @Query("update Post p " +
+            "set p.likes = p.likes - 1 " +
+            "where p.id = :id")
+    void updateDisLike(@Param("id") Long id);
 }

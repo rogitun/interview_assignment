@@ -39,5 +39,5 @@ thymeleaf:
   mvc:
     static-path-pattern: "/static/**"
 
-Secret:
-  key: "Hansel970901"
+#Secret:
+#  key: "Hansel970901"

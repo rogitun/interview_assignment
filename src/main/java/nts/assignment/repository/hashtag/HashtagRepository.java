@@ -17,4 +17,7 @@ public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
             "left join h.posts hp " +
             "where hp.post.postId = :id")
     List<String> findHashTagByPostId(@Param("id") Long id);
+
+
+
 }

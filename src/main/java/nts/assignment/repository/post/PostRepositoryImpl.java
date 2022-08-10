@@ -1,21 +1,17 @@
 package nts.assignment.repository.post;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import nts.assignment.controller.dto.SearchCond;
 import nts.assignment.domain.Post;
-import nts.assignment.domain.QHashtag;
-import nts.assignment.domain.QHashtagPost;
 import nts.assignment.domain.QPost;
 import nts.assignment.domain.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

@@ -39,11 +39,11 @@ public class Post {
     @Column(name = "is_new")
     private boolean isNew;
 
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
     private List<Comment> comments = new LinkedList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "post")
     @Builder.Default
     private List<HashtagPost> hashtags = new LinkedList<>();
 

@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nts.assignment.controller.dto.SearchCond;
 import nts.assignment.domain.*;
-import nts.assignment.domain.dto.CommentDto;
 import nts.assignment.domain.dto.MainPostDto;
 import nts.assignment.domain.dto.PostFormDto;
 import nts.assignment.domain.dto.SinglePostDto;
-import nts.assignment.domain.form.CommentForm;
 import nts.assignment.domain.form.EditForm;
 import nts.assignment.domain.form.PostForm;
 import nts.assignment.repository.AnonymousLikeRepository;
@@ -36,8 +34,8 @@ public class PostService {
     private final HashtagRepository hashtagRepository;
     private final TagPostRepository tagPostRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final CommentRepository commentRepository;
     private final AnonymousLikeRepository anonymousLikeRepository;
+    private final CommentRepository commentRepository;
 
     private final int DAY = 86400;
     private final int MINUTE = 60;
@@ -61,7 +59,6 @@ public class PostService {
         return build;
     }
 
-    //TODO 쿼리 과다
     private void makeHashTags(String hashtag, Post post) {
         String[] hashtags = hashtag.split("#");//해쉬태그 구분
         hashtags = Arrays.stream(hashtags).map(s -> s = s.replaceAll(" ", "")).toArray(String[]::new);
@@ -90,55 +87,30 @@ public class PostService {
 
     @Transactional
     public SinglePostDto getSinglePost(Long id) {
-        // Optional<Post> postWithComments = postRepository.findPostWithComments(id);
         Optional<SinglePostDto> singlePost = postRepository.getSinglePost(id);
         postRepository.updateView(id);
         return singlePost.orElseThrow();
     }
 
-//    @Transactional
-//    public Post getSinglePost(Long id) {
-//        Optional<Post> postWithComments = postRepository.findPostWithComments(id);
-//        Post post = postWithComments.orElseThrow();
-//        postRepository.updateView(id);
-//        // post.updateView();
-//        return post;
-//    }
-
     @Transactional
     public void delPost(Long id, String password) {
         //비밀번호 일치 확인
         log.info("param = {}, {}", id, password);
-        Optional<Post> byId = postRepository.findById(id);
-        if (byId.isEmpty()) throw new NoSuchElementException();
+      //  Optional<Post> byId = postRepository.findById(id);
+        String postPassword = postRepository.findPasswordById(id);
+        if (postPassword==null) throw new NoSuchElementException();
 
-        Post post = byId.get();
+        //Post post = byId.get();
 
-        //비밀번호 일치 확인 TODO 비밀번호만 가져와서 비교하면 조회 쿼리 단순화 가능
-        if (passwordEncoder.matches(password, post.getPassword())) {
-            postRepository.deleteById(id);
+        //비밀번호 일치 확인
+        if (passwordEncoder.matches(password, postPassword)) {
+            commentRepository.deleteByPostId(id);
+            tagPostRepository.deleteByPostId(id); //delete 쿼리
+            postRepository.deleteByPostId(id);
         } else throw new NoSuchElementException();
-        //Long cnt = postRepository.countPostByPassword(id, password);
-        //log.info("cnt = {}",cnt);
-//        if(cnt<=0){ //없으면 예외
-//            throw new NoSuchElementException();
-//        }
-        //있으면 삭제
     }
 
-//    public List<Hashtag> getHashTags(Long id) {
-//        //        log.info("size = {}",hastTags.size());
-////        for (Hashtag hastTag : hastTags) {
-////            log.info("hashTag = {}",hastTag.getName());
-////        }
-//        return hashtagRepository.findHashTagByPostId(id);
-//    }
-
     public List<String> getHashTags(Long id) {
-        //        log.info("size = {}",hastTags.size());
-//        for (Hashtag hastTag : hastTags) {
-//            log.info("hashTag = {}",hastTag.getName());
-//        }
         return hashtagRepository.findHashTagByPostId(id);
     }
 
@@ -147,9 +119,7 @@ public class PostService {
         return editForm.orElseThrow();
     }
 
-
     public String getHashTagsString(Long id) {
-        //List<Hashtag> hastTags = hashtagRepository.findHashTagByPostId(id);
         List<String> hastTags = hashtagRepository.findHashTagByPostId(id);
         StringBuilder hash = new StringBuilder();
         for (String hastTag : hastTags) {
@@ -169,8 +139,10 @@ public class PostService {
         curPost.editPost(obj.getTitle(), obj.getContent(), passwordEncoder.encode(obj.getPassword()), obj.getWriter());
 
         //기존 해시태그 삭제하고 새로 등록한다.
-        tagPostRepository.deleteByPostId(id);
-        makeHashTags(obj.getHashtag(), curPost);
+        if(StringUtils.hasText(obj.getHashtag())) {
+            tagPostRepository.deleteByPostId(id);
+            makeHashTags(obj.getHashtag(), curPost);
+        }
     }
 
     public boolean countByPassword(Long id, String password) {
@@ -178,52 +150,10 @@ public class PostService {
         return passwordEncoder.matches(password, encodePwd);
     }
 
-    @Transactional //id = Post_id,
-    public void addComment(Long id, CommentForm comment) {
-        Optional<Post> postOptional = postRepository.findById(id);
-        Post post = postOptional.orElseThrow();
-        Comment newComment = new Comment(comment.getWriter(),
-                passwordEncoder.encode(comment.getPassword()),
-                comment.getContent(), post);
-        commentRepository.save(newComment);
-    }
-
-    @Transactional //TODO 비밀번호만 가져와서 비교하면 조회 쿼리 단순화 가능
-    public void delComment(Long id, String password) {
-        Optional<Comment> cmt = commentRepository.findById(id);
-        Comment comment = cmt.orElseThrow();
-
-        if (passwordEncoder.matches(password, comment.getPassword())) {
-            comment.delComment();
-        } else throw new NoSuchElementException();
-    }
-
-    public Long countAllComment() {
-        return commentRepository.count();
-    }
-
-//    public List<CommentDto> getCommentDtos(List<Comment> comments) {
-//        List<CommentDto> commentDtos = new LinkedList<>();
-//        for (Comment comment : comments) {
-//            CommentDto commentDto = new CommentDto(
-//                    comment.getCommentId(),
-//                    comment.getWriter(),
-//                    comment.getContent(),
-//                    comment.getCreated());
-//            commentDtos.add(commentDto);
-//        }
-//        return commentDtos;
-//    }
-
-    public Page<CommentDto> getCommentDtos(Long id, Pageable pageable) {
-        return commentRepository.findCommentByPostId(id, pageable);
-    }
-
     public Long countAllPost() {
         return postRepository.count();
     }
 
-    //TODO 겹치는 부분
     @Transactional
     public boolean likePost(Long id, String ip) {
         //4가지 상황
@@ -237,7 +167,7 @@ public class PostService {
 
         Optional<AnonymousLike> anonymousLike = anonymousLikeRepository.countByPostId(id, ip);
         if (anonymousLike.isEmpty()) { //내가 아직 추천을 안눌러서 추천이 가능함.
-            post.addLike();
+            postRepository.updateLike(id);
             AnonymousLike newAddrLike = new AnonymousLike(ip, post);
             anonymousLikeRepository.save(newAddrLike);
             return true;
@@ -246,7 +176,7 @@ public class PostService {
         AnonymousLike postLiked = anonymousLike.get();
         if (timePassCheck(postLiked.getActionDate())) {//내가 추천을 눌렀지만 하루가 지나서 추천이 가능한 상황 => add
             postLiked.addSamePost();
-            post.addLike();
+            postRepository.updateLike(id);
             return true;
         }
         return false; //내가 추천을 눌렀고 하루가 안지나서 추천이 불가능한 상황 => ?
@@ -259,7 +189,7 @@ public class PostService {
 
         Optional<AnonymousLike> anonymousLike = anonymousLikeRepository.countByPostId(id, ip);
         if (anonymousLike.isEmpty()) { //내가 아직 추천을 안눌러서 추천이 가능함.
-            post.disLike();
+            postRepository.updateDisLike(id);
             AnonymousLike newAddrLike = new AnonymousLike(ip, post);
             anonymousLikeRepository.save(newAddrLike);
             return true;
@@ -268,7 +198,7 @@ public class PostService {
         AnonymousLike postLiked = anonymousLike.get();
         if (timePassCheck(postLiked.getActionDate())) {//내가 추천을 눌렀지만 하루가 지나서 추천이 가능한 상황 => add
             postLiked.addSamePost();
-            post.disLike();
+            postRepository.updateDisLike(id);
             return true;
         }
         return false; //내가 추천을 눌렀고 하루가 안지나서 추천이 불가능한 상황 => ?
@@ -276,8 +206,6 @@ public class PostService {
 
     private boolean timePassCheck(LocalDateTime actionDate) {
         Duration duration = Duration.between(actionDate, LocalDateTime.now());
-        // log.info("duration = {}",duration);
-        //정해진 날짜보다 더 흘렀다.
-        return duration.getSeconds() > MINUTE;
+        return duration.getSeconds() > DAY;
     }
 }

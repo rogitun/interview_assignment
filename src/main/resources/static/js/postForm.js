@@ -40,11 +40,11 @@ function addPost(){
         headers: {"Content-Type": "application/json"},
         data : JSON.stringify(obj),
         success : function(result){
-            alert("등록되었습니다.");
+            alert(result);
             window.location.replace("/");
         },
         error : function(error){
-            alert("잘못된 접근입니다.");
+            alert(error.responseText);
         }
     })
 }
