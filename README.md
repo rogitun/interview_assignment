@@ -25,4 +25,35 @@
 </ul>
 
 # 결과사진
-마감일 이전까지 추가 예정입니다.
+
+<h5> 게시글 작성 & 수정 & 추천 & 조회수 등</h5>
+
+![14](https://user-images.githubusercontent.com/81704910/183832395-5e0081e4-b954-4fc6-9bb5-47e56056b5e3.png)
+
+
+![2](https://user-images.githubusercontent.com/81704910/183831652-fbde959b-82bd-4a15-aaa4-d1244e1e9493.png)
+
+![3](https://user-images.githubusercontent.com/81704910/183831684-3a45ca0d-8869-49cf-8f94-19f337a668cc.png)
+
+![4](https://user-images.githubusercontent.com/81704910/183831711-2a6ee1c7-cb21-4d12-96d6-02bbc87aea05.png)
+
+![6](https://user-images.githubusercontent.com/81704910/183831953-fa2d7dfb-820b-4741-9338-c91d2dda8c35.png)
+
+![7](https://user-images.githubusercontent.com/81704910/183831960-ffe77131-1d83-4d55-96f9-474cecbb8696.png)
+
+<h5> 댓글 삭제 & 더보기 </h5>
+
+![9](https://user-images.githubusercontent.com/81704910/183832164-6df03240-c9b0-461f-b15b-9845aefc3d08.png)
+
+![10-더보기](https://user-images.githubusercontent.com/81704910/183832159-ff41835e-dd60-402a-998a-77a8f620e3e1.png)
+
+
+
+<h5> 검색 & 페이징</h5>
+
+![11](https://user-images.githubusercontent.com/81704910/183831764-67b7eba8-1276-491d-bf46-922e00d4ee37.png)
+
+![12-검색](https://user-images.githubusercontent.com/81704910/183831800-da5752fc-58e8-455d-bd66-8b3774d9a7e0.png)
+
+![13](https://user-images.githubusercontent.com/81704910/183831814-3282b115-8681-4877-9780-9ebaf9bc01a4.png)
+
