@@ -2,6 +2,23 @@
 
 <h5>게시글과 댓글 기능을 가진 게시판 구현</h5>
 
+# 주의사항 #
+
+현재 schema.sql에 sequence table이 누락되어 있습니다.
+
+테스트를 하기 위해선 resources/schema.sql에 아래와 같은 SQL문이 추가되어야 합니다.
+
+죄송합니다.
+
+DROP TABLE IF EXISTS hibernate_sequence;
+
+create table hibernate_sequence(
+	next_val bigint
+);
+
+insert into hibernate_sequence (next_val) values(1);
+
+
 # ERD
 ![erd2](https://user-images.githubusercontent.com/81704910/183444283-d74bb77d-2a91-45a6-84d2-7782917eadd2.png)
 
