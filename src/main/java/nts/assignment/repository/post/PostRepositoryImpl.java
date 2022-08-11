@@ -40,7 +40,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (StringUtils.hasText(cond.getCategory()) && cond.getCategory().equals("hashtag")) {
             data = queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer,
                     post.created, post.modified, post.viewed,
-                    post.likes, post.isNew, post.comments.size()))
+                    post.likes, post.isNew, post.comments.size())).distinct()
                     .offset(pageRequest.getOffset())
                     .limit(pageRequest.getPageSize())
                     .from(post)
