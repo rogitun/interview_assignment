@@ -136,4 +136,20 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return null;
     }
 
+    @Override
+    public List<MainPostDto> getLikedPosts(int likes) {
+        //좋아요 5개 이상 게시글 조회
+
+        return queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer, post.created, post.modified, post.viewed, post.likes, post.isNew, post.comments.size()))
+                .from(post)
+                .where(isUpperLiked(likes))
+                .orderBy(post.likes.desc())
+                .fetch();
+    }
+
+    private BooleanBuilder isUpperLiked(int likes){
+        BooleanBuilder builder = new BooleanBuilder();
+        return builder.and(post.likes.goe(likes));
+    }
+
 }

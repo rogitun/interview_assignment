@@ -208,4 +208,8 @@ public class PostService {
         Duration duration = Duration.between(actionDate, LocalDateTime.now());
         return duration.getSeconds() > DAY;
     }
+
+    public List<MainPostDto> getLikedPost(int likes) {
+        return postRepository.getLikedPosts(likes);
+    }
 }

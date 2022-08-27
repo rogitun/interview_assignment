@@ -23,4 +23,6 @@ public interface PostRepositoryCustom {
     Optional<Post> findPostWithComments(Long id);
 
     List<Long> countMain();
+
+    List<MainPostDto> getLikedPosts(int likes);
 }
