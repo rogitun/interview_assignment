@@ -4,6 +4,14 @@ DROP TABLE IF EXISTS hashtag_post;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS hashtag;
 
+DROP TABLE IF EXISTS hibernate_sequence;
+
+create table hibernate_sequence(
+	next_val bigint
+);
+
+insert into hibernate_sequence (next_val) values(1);
+
 create table post (
     post_id bigint not null AUTO_INCREMENT,
     title varchar(255) not null,

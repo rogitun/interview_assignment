@@ -30,10 +30,10 @@ public class Dummies {
         Post post = Post.builder()
                 .password(passwordEncoder.encode("1234"))
                 .writer("FirstWriter")
-                .content("ㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㅈㄷㅂㅈㄷㅂㅈㅇㅈㅂㅁㄴㅇㅁㄴㅇ")
+                .content("반갑습니당")
                 .created(LocalDateTime.now())
                 .modified(LocalDateTime.now())
-                .title("제목").build();
+                .title("첫번째 게시글").build();
         postRepository.save(post);
 
         for(int i=0;i<23;i++) {
