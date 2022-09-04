@@ -21,12 +21,12 @@ public class MainPostDto {
 
     private int viewed;
     private int likes;
-    private boolean isNew;
 
+    private boolean isNew;
     private int commentSize;
 
     @QueryProjection
-    public MainPostDto(Long post_id, String title, String writer, LocalDateTime created, LocalDateTime modified, int viewed, int likes, boolean isNew, int commentSize) {
+    public MainPostDto(Long post_id, String title, String writer, LocalDateTime created, LocalDateTime modified, int viewed, int likes, int commentSize) {
         this.post_id = post_id;
         this.title = title;
         this.writer = writer;

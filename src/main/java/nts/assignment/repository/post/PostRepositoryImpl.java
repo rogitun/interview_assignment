@@ -40,7 +40,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         if (StringUtils.hasText(cond.getCategory()) && cond.getCategory().equals("hashtag")) {
             data = queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer,
                     post.created, post.modified, post.viewed,
-                    post.likes, post.isNew, post.comments.size())).distinct()
+                    post.likes, post.comments.size())).distinct()
                     .offset(pageRequest.getOffset())
                     .limit(pageRequest.getPageSize())
                     .from(post)
@@ -59,7 +59,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         } else {
             data = queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer,
                             post.created, post.modified, post.viewed,
-                            post.likes, post.isNew, post.comments.size()))
+                            post.likes, post.comments.size()))
                     .offset(pageRequest.getOffset())
                     .limit(pageRequest.getPageSize())
                     .from(post)
@@ -140,7 +140,9 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     public List<MainPostDto> getLikedPosts(int likes) {
         //좋아요 5개 이상 게시글 조회
 
-        return queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer, post.created, post.modified, post.viewed, post.likes, post.isNew, post.comments.size()))
+        return queryFactory.select(new QMainPostDto(post.postId, post.title, post.writer,
+                        post.created, post.modified, post.viewed,
+                        post.likes, post.comments.size()))
                 .from(post)
                 .where(isUpperLiked(likes))
                 .orderBy(post.likes.desc())

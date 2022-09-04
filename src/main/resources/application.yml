@@ -8,14 +8,14 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate:
-        format_sql: 'true'
+        format_sql: true
+        show_sql: true
     hibernate:
       ddl-auto: none
 
 
   datasource:
     initialization-mode: always
-    #schema: classpath:db/ntsdb/schema.sql
     password: ghkd0045
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
@@ -38,6 +38,3 @@ thymeleaf:
   cache: false
   mvc:
     static-path-pattern: "/static/**"
-
-#Secret:
-#  key: "Hansel970901"

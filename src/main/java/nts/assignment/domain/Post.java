@@ -36,9 +36,6 @@ public class Post {
     private int viewed;
     private int likes;
 
-    @Column(name = "is_new")
-    private boolean isNew;
-
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
     private List<Comment> comments = new LinkedList<>();

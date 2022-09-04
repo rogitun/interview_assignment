@@ -22,7 +22,6 @@ create table post (
     modified timestamp,
     viewed integer,
     likes integer,
-    is_new bit,
     primary key (post_id)
 );
 

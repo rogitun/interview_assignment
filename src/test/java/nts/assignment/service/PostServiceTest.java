@@ -1,6 +1,5 @@
 package nts.assignment.service;
 
-import nts.assignment.config.AESCrypto;
 import nts.assignment.domain.Comment;
 import nts.assignment.domain.Post;
 import nts.assignment.repository.comment.CommentRepository;
@@ -13,8 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class PostServiceTest {
@@ -30,7 +27,7 @@ class PostServiceTest {
 
 
     @Test
-    public void test() throws Exception {
+    public void test() {
         String a = "abc1234";
         String encrypt = passwordEncoder.encode(a);
 
